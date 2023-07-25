@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	// _ "github.com/joho/godotenv/autoload" // load .env file automatically
+	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 )
 
 var (

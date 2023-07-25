@@ -30,11 +30,26 @@ type IApp interface {
 type middleware func(*fiber.App)
 type route func(*fiber.App)
 type worker func(*amqp.Delivery)
+type backgroundTask func()
 
 func New() IApp {
 	config := configs.FiberConfig()
 	return &_App{
 		engine: fiber.New(config),
+	}
+}
+
+func (app *_App) BackgroundTask(tasks ...backgroundTask) {
+	for _, task := range tasks {
+		go task()
+	}
+}
+
+func (app *_App) workerExecute(msgs <-chan amqp.Delivery, workers ...worker) {
+	for msg := range msgs {
+		for _, worker := range workers {
+			go worker(&msg)
+		}
 	}
 }
 

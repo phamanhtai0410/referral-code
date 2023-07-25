@@ -6,6 +6,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/swagger v0.1.12
 	github.com/google/uuid v1.3.0
+	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/streadway/amqp v1.1.0
 	github.com/swaggo/swag v1.16.1
