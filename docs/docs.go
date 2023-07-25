@@ -121,11 +121,14 @@ const docTemplate = `{
         "models.RefCode": {
             "type": "object",
             "properties": {
-                "domain": {
+                "address": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "number"
+                "counter": {
+                    "type": "integer"
+                },
+                "created": {
+                    "type": "string"
                 },
                 "refcode": {
                     "type": "integer"

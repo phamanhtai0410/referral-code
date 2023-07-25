@@ -2,10 +2,12 @@ basePath: /api
 definitions:
   models.RefCode:
     properties:
-      domain:
+      address:
         type: string
-      price:
-        type: number
+      counter:
+        type: integer
+      created:
+        type: string
       refcode:
         type: integer
     type: object
