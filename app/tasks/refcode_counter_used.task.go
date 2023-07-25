@@ -1,22 +1,16 @@
 package tasks
 
 import (
-	"example.com/refcode/v1/app/models"
-	"example.com/refcode/v1/pkg/constants"
-	"github.com/streadway/amqp"
+	"time"
+
+	"example.com/refcode/v1/app/workers"
 )
 
-func RefCodeCounterUsed(msg *amqp.Delivery) {
-	if msg.MessageId == constants.MsgRefCodeCounter {
-		code := string(msg.Body)
-		model := models.RefCode{
-			RefCode: code,
-		}
-		count, isExist := model.IsExits(code)
-		if !isExist {
-			return
-		}
-		count++
-		// TODO:
+func RefCodeCounterUsed() {
+	ticker := time.NewTicker(1 * time.Minute)
+	defer ticker.Stop()
+	workers.CountNumberOfRefCodeUsed(<-ticker.C)
+	for _time := range ticker.C {
+		go workers.CountNumberOfRefCodeUsed(_time)
 	}
 }

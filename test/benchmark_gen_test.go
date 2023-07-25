@@ -11,7 +11,7 @@ import (
 func BenchmarkAPIGEN(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		address := uuid.New().String()
-		url := fmt.Sprintf("http://127.0.0.1:5000/refcode/gen/%s", address)
+		url := fmt.Sprintf("http://127.0.0.1:5000/get?address=%s", address)
 		resp, err := http.Get(url)
 		if err != nil {
 			b.Fatalf("Failed to send GET request: %v", err)

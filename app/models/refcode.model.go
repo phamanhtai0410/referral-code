@@ -65,3 +65,29 @@ func (ref *RefCode) UpdateCounter(counter int64) error {
 	_, err := collection.UpdateOne(context.TODO(), filter, update)
 	return err
 }
+
+func (ref *RefCode) GetAllRecords() ([]RefCode, error) {
+	collection := database.GetCollection(tableDetails)
+	var codes []RefCode
+
+	cursor, err := collection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.TODO())
+
+	
+	for cursor.Next(context.TODO()) {
+		var code RefCode
+		if err := cursor.Decode(&code); err != nil {
+			return nil, err
+		}
+		codes = append(codes, code)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return codes, nil
+}

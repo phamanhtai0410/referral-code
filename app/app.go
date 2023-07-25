@@ -20,11 +20,12 @@ type _App struct {
 }
 
 type IApp interface {
-	Tasks(...worker)
+	Worker(...worker)
 	Middleware(...middleware) IApp
 	Route(...route) IApp
 	Run()
 	Shutdown(<-chan os.Signal)
+	BackgroundTask(...backgroundTask)
 }
 
 type middleware func(*fiber.App)
@@ -53,18 +54,12 @@ func (app *_App) workerExecute(msgs <-chan amqp.Delivery, workers ...worker) {
 	}
 }
 
-func (app *_App) Tasks(workers ...worker) {
+func (app *_App) Worker(workers ...worker) {
 	msgs, err := queue.Consume(constants.WorkerQueue)
 	if err != nil {
 		log.Fatal("failed to consume refcode info: ", err)
 	}
-	go func() {
-		for msg := range msgs {
-			for _, worker := range workers {
-				go worker(&msg)
-			}
-		}
-	}()
+	go app.workerExecute(msgs, workers...)
 }
 
 func (app *_App) Middleware(middlewares ...middleware) IApp {

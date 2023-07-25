@@ -21,7 +21,7 @@ func BenchmarkAPISAVE(b *testing.B) {
 		}
 
 		jsonData, _ := json.Marshal(requestBody)
-		url := "http://127.0.0.1:5000/refcode/save"
+		url := "http://127.0.0.1:5000/save"
 		resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			fmt.Println("Lỗi khi gửi yêu cầu:", err)

@@ -5,12 +5,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	"example.com/refcode/v1/app/workers"
+
 	"example.com/refcode/v1/app"
-	"example.com/refcode/v1/app/tasks"
 	_ "example.com/refcode/v1/docs" // load API Docs files (Swagger)
 	"example.com/refcode/v1/pkg/middleware"
 	"example.com/refcode/v1/pkg/routes"
-
 	// _ "github.com/joho/godotenv/autoload" // load .env file automatically
 )
 
@@ -35,10 +35,15 @@ func main() {
 	_app := app.New()
 	_app.Shutdown(sigChan)
 
+	// register background tasks
+	// _app.BackgroundTask(
+	// 	tasks.RefCodeCounterUsed,
+	// )
+
 	// register workers
-	_app.Tasks(
-		tasks.SaveRefCode,
-		tasks.SaveRefCodeUsed,
+	_app.Worker(
+		workers.SaveRefCode,
+		workers.SaveRefCodeUsed,
 		//tasks.RefCodeCounterUsed,
 	)
 
