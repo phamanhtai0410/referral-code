@@ -22,7 +22,7 @@ func SaveRefCode(msg *amqp.Delivery) {
 		model := models.RefCode{
 			RefCode: req.RefCode,
 			Address: req.Address,
-			Created: time.Now().UTC().Format("2006-01-02T15:04:05.000Z"),
+			Created: time.Now().UTC(),
 			Counter: 0,
 		}
 		err = model.Save()

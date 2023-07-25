@@ -9,5 +9,5 @@ func RefCodeRoute(a *fiber.App) {
 	// route := a.Group("/refcode")
 	a.Get("/get", controllers.RefCodeGenerate)
 	a.Post("/save", controllers.SaveRefCodeUsed)
-	//route.Get("/share", middleware.Auth, controllers.RefCodeCounter)
+	// a.Get("/test", controllers.RefCodeCounter)
 }

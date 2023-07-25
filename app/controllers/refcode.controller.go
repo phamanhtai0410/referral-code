@@ -60,17 +60,17 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 	})
 }
 
-//func RefCodeCounter(c *fiber.Ctx) error {
-//	code := c.Params("code", "NONE")
-//	if code == "NONE" {
-//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"msg":     "referral code is required",
-//			"success": false,
-//		})
-//	}
-//
-//	return c.JSON(fiber.Map{
-//		"msg":     "ok",
-//		"success": true,
-//	})
-//}
+// func RefCodeCounter(c *fiber.Ctx) error {
+// 	tableCodeUsed := new(models.RefCodeUsed)
+// 	tableCodeUsed.RefCode = utils.String2Int64(c.Query("code"))
+// 	currentTime := time.Now()
+// 	oneMinuteAgo := currentTime.Add(-2 * time.Minute)
+// 	count, _ := tableCodeUsed.CountDocumentsByTime(
+// 		oneMinuteAgo.UTC(),
+// 		currentTime.UTC(),
+// 	)
+// 	return c.JSON(fiber.Map{
+// 		"msg":     count,
+// 		"success": true,
+// 	})
+// }

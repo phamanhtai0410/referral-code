@@ -1,6 +1,7 @@
 package workers
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -18,10 +19,13 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 	}
 	for _, code := range codes {
 		tableCodeUsed.RefCode = code.RefCode
+		tableRefCode.RefCode = code.RefCode
 		count, _ := tableCodeUsed.CountDocumentsByTime(
-			oneMinuteAgo.UTC().Format("2006-01-02T15:04:05.000Z"),
-			currentTime.UTC().Format("2006-01-02T15:04:05.000Z"),
+			oneMinuteAgo.UTC(),
+			currentTime.UTC(),
 		)
 		tableRefCode.UpdateCounter(code.Counter + count)
+		logMsg := fmt.Sprintf("[WORKER JOBS] count number of ref codes %d: %d", code.RefCode, code.Counter+count)
+		log.Println(logMsg)
 	}
 }

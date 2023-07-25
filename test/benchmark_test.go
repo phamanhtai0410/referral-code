@@ -14,7 +14,7 @@ func BenchmarkAPISAVE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		address := uuid.New().String()
 		requestBody := map[string]interface{}{
-			"refcode": "914337e2366042cc80856c2f3d6caadb",
+			"refcode": 111182,
 			"domain":  "kawasaki.meme",
 			"price":   1.2,
 			"address": address,

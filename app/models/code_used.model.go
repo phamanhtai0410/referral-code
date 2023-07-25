@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"time"
 
 	"example.com/refcode/v1/platform/database"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,11 +13,11 @@ const (
 )
 
 type RefCodeUsed struct {
-	RefCode string  `json:"refcode"`
+	RefCode int64  `json:"refcode"`
 	Domain  string  `json:"domain"`
 	Price   float64 `json:"price"`
 	Address string  `json:"address"`
-	Created string  `bson:"created"`
+	Created time.Time  `bson:"created"`
 }
 
 func (r *RefCodeUsed) Save() error {
@@ -26,7 +27,7 @@ func (r *RefCodeUsed) Save() error {
 	return err
 }
 
-func (r *RefCodeUsed) CountDocumentsByTime(startTime, endTime string) (int64, error) {
+func (r *RefCodeUsed) CountDocumentsByTime(startTime, endTime time.Time) (int64, error) {
 	collection := database.GetCollection(tableCodeUsed)
 	filter := bson.M{
 		"refcode": r.RefCode,

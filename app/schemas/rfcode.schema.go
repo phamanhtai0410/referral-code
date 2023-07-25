@@ -1,20 +1,20 @@
 package schemas
 
 type RefCodeResponse struct {
-	Code    string `json:"code"`
+	Code    int64 `json:"code"`
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
 
 type RefCodeUsedRequest struct {
-	RefCode string  `json:"refcode"`
+	RefCode int64  `json:"refcode"`
 	Domain  string  `json:"domain"`
 	Price   float64 `json:"price"`
 	Address string  `json:"address"`
 }
 
 type RefCodeRequest struct {
-	RefCode string `json:"ref_code"`
+	RefCode int64 `json:"ref_code"`
 	Address string `json:"address"`
 }
 

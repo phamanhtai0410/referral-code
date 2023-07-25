@@ -2,8 +2,8 @@ package services
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
+	"time"
 
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/platform/cache"
@@ -13,19 +13,29 @@ import (
 	"example.com/refcode/v1/platform/queue"
 )
 
-func GenRefCode(address string) string {
+func GenRefCode(address string) int64 {
 	var refcode models.RefCode
 	code, _ := refcode.FindByAddress(address)
-	if code == "" {
+	if code == -1 {
 		val, err := cache.Incr(constants.CacheCounter)
 		if err != nil {
 			log.Fatal("[SERVICE] " + err.Error())
 		}
-		code = fmt.Sprintf("%06d", val)
-		SaveRefCode(&schemas.RefCodeRequest{
+		code = val
+		// SaveRefCode(&schemas.RefCodeRequest{
+		// 	Address: address,
+		// 	RefCode: val,
+		// })
+		model := models.RefCode{
+			RefCode: val,
 			Address: address,
-			RefCode: code,
-		})
+			Created: time.Now().UTC(),
+			Counter: 0,
+		}
+		err = model.Save()
+		if err != nil {
+			log.Fatal(constants.LogWorkerSaveCodeDetails, err)
+		}
 	}
 	return code
 }

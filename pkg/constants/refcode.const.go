@@ -1,5 +1,5 @@
 package constants
 
 const (
-	CacheCounter string = "refcode.counter"
+	CacheCounter string = "refcode.CodeCounter"
 )

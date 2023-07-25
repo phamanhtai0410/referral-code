@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"log"
+	"time"
 
 	"example.com/refcode/v1/platform/database"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,10 +15,10 @@ const (
 )
 
 type RefCode struct {
-	Created string `json:"created"`
-	RefCode string `json:"refcode"`
-	Address string `json:"address"`
-	Counter int64  `json:"counter"`
+	Created time.Time `json:"created"`
+	RefCode int64     `json:"refcode"`
+	Address string    `json:"address"`
+	Counter int64     `json:"counter"`
 }
 
 func (ref *RefCode) Save() error {
@@ -27,7 +28,7 @@ func (ref *RefCode) Save() error {
 	return err
 }
 
-func (ref *RefCode) FindByAddress(address string) (string, error) {
+func (ref *RefCode) FindByAddress(address string) (int64, error) {
 	var result RefCode
 	collections := database.GetCollection(tableDetails)
 	ctx, _ := database.NewContext()
@@ -35,7 +36,7 @@ func (ref *RefCode) FindByAddress(address string) (string, error) {
 	err := collections.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return "", err
+			return -1, err
 		}
 		log.Fatal("[MODEL] ", err)
 	}
@@ -76,7 +77,6 @@ func (ref *RefCode) GetAllRecords() ([]RefCode, error) {
 	}
 	defer cursor.Close(context.TODO())
 
-	
 	for cursor.Next(context.TODO()) {
 		var code RefCode
 		if err := cursor.Decode(&code); err != nil {

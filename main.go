@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"example.com/refcode/v1/app/tasks"
 	"example.com/refcode/v1/app/workers"
 
 	"example.com/refcode/v1/app"
@@ -36,14 +37,14 @@ func main() {
 	_app.Shutdown(sigChan)
 
 	// register background tasks
-	// _app.BackgroundTask(
-	// 	tasks.RefCodeCounterUsed,
-	// )
+	_app.BackgroundTask(
+		tasks.RefCodeCounterUsed,
+	)
 
 	// register workers
 	_app.Worker(
-		workers.SaveRefCode,
 		workers.SaveRefCodeUsed,
+		// workers.SaveRefCode,
 		//tasks.RefCodeCounterUsed,
 	)
 
