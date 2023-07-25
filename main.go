@@ -11,7 +11,7 @@ import (
 	"example.com/refcode/v1/pkg/middleware"
 	"example.com/refcode/v1/pkg/routes"
 
-	_ "github.com/joho/godotenv/autoload" // load .env file automatically
+	// _ "github.com/joho/godotenv/autoload" // load .env file automatically
 )
 
 // @title API
