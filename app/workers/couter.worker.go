@@ -24,8 +24,10 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 			oneMinuteAgo.UTC(),
 			currentTime.UTC(),
 		)
-		tableRefCode.UpdateCounter(code.Counter + count)
-		logMsg := fmt.Sprintf("[WORKER JOBS] count number of ref codes %d: %d", code.RefCode, code.Counter+count)
-		log.Println(logMsg)
+		if count != 0 {
+			tableRefCode.UpdateCounter(code.Counter + count)
+			logMsg := fmt.Sprintf("[WORKER JOBS] count number of ref codes %d: %d", code.RefCode, code.Counter+count)
+			log.Println(logMsg)
+		}
 	}
 }
