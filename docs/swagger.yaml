@@ -1,0 +1,88 @@
+basePath: /api
+definitions:
+  models.RefCode:
+    properties:
+      domain:
+        type: string
+      price:
+        type: number
+      refcode:
+        type: integer
+    type: object
+info:
+  contact:
+    email: your@mail.com
+    name: API Support
+  description: This is an auto-generated API Docs.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: API
+  version: "1.0"
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      description: health check api server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      tags:
+      - HealthCheck
+  /refcode/gen:
+    get:
+      consumes:
+      - application/json
+      description: Generate RefCode.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RefCode'
+      tags:
+      - RefCode
+  /refcode/save:
+    post:
+      consumes:
+      - application/json
+      description: Save RefCode to Database.
+      parameters:
+      - description: RefCode
+        in: body
+        name: refcode
+        required: true
+        schema:
+          type: number
+      - description: Domain
+        in: body
+        name: domain
+        required: true
+        schema:
+          type: string
+      - description: Price
+        in: body
+        name: price
+        required: true
+        schema:
+          type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RefCode'
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

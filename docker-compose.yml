@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  # services:
+  #   image: refcode_api
+  #   env_file:
+  #     - .env
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   # volumes:
+  #   #   -./:/app
+  #   ports:
+  #     - 5000:5000
+  #   networks:
+  #     - dev-networks
+  #   depends_on:
+  #     - rabbitmq
+  #   command: ./build/refcode_api
+  rabbitmq:
+    image: rabbitmq:3-management
+    volumes:
+      - ./docker/data/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - '5672:5672'  # AMQP
+      - '15672:15672' # rabbitmq management UI
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - dev-networks
+  redis-services:
+    image: redis
+    volumes:
+      - ./docker/data/redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - dev-networks
+networks:
+  dev-networks:
