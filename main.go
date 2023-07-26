@@ -1,11 +1,11 @@
 package main
 
 import (
+	"example.com/refcode/v1/app/tasks"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"example.com/refcode/v1/app/tasks"
 	"example.com/refcode/v1/app/workers"
 
 	"example.com/refcode/v1/app"
@@ -39,6 +39,7 @@ func main() {
 	// register background tasks
 	_app.BackgroundTask(
 		tasks.RefCodeCounterUsed,
+		tasks.ListenChainEvent,
 	)
 
 	// register workers

@@ -1,6 +1,7 @@
 package workers
 
 import (
+	"example.com/refcode/v1/pkg/constants"
 	"fmt"
 	"log"
 	"time"
@@ -10,12 +11,12 @@ import (
 
 func CountNumberOfRefCodeUsed(_time time.Time) {
 	currentTime := _time
-	oneMinuteAgo := _time.Add(-1 * time.Minute)
+	oneMinuteAgo := _time.Add(-1 * constants.JobSchedule * time.Minute)
 	tableRefCode := new(models.RefCode)
 	tableCodeUsed := new(models.RefCodeUsed)
 	codes, err := tableRefCode.GetAllRecords()
 	if err != nil {
-		log.Fatal("[WORKER] count number of ref codes ", err)
+		log.Fatal("[WORKER #1] count number of ref codes ", err)
 	}
 	for _, code := range codes {
 		tableCodeUsed.RefCode = code.RefCode
@@ -25,8 +26,11 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 			currentTime.UTC(),
 		)
 		if count != 0 {
-			tableRefCode.UpdateCounter(code.Counter + count)
-			logMsg := fmt.Sprintf("[WORKER JOBS] count number of ref codes %d: %d", code.RefCode, code.Counter+count)
+			err = tableRefCode.UpdateCounter(code.Counter + count)
+			if err != nil {
+				return
+			}
+			logMsg := fmt.Sprintf("[WORKER #2] count number of ref codes %d: %d", code.RefCode, code.Counter+count)
 			log.Println(logMsg)
 		}
 	}

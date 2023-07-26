@@ -18,7 +18,7 @@ func NewContext() (context.Context, context.CancelFunc) {
 }
 
 func init() {
-	uri := fmt.Sprintf("%s://%s:%d", configs.DB_TYPE, configs.DB_HOST, configs.DB_PORT)
+	uri := fmt.Sprintf("%s://%s:%d", configs.DbType, configs.DbHost, configs.DbPort)
 	ctx, _ := NewContext()
 	var err error
 	client, err = mongo.Connect(ctx, options.Client().ApplyURI(uri))
@@ -44,5 +44,5 @@ func Shutdown() {
 }
 
 func GetCollection(col string) *mongo.Collection {
-	return client.Database(configs.DB_NAME).Collection(col)
+	return client.Database(configs.DbName).Collection(col)
 }

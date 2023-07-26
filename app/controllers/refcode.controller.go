@@ -1,13 +1,11 @@
 package controllers
 
 import (
-	"log"
-
-	"example.com/refcode/v1/app/services"
-
 	"example.com/refcode/v1/app/schemas"
+	"example.com/refcode/v1/app/services"
 	"example.com/refcode/v1/pkg/constants"
 	"github.com/gofiber/fiber/v2"
+	"log"
 )
 
 // RefCodeGenerate Generate RefCode.
@@ -53,24 +51,59 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 			"success": false,
 		})
 	}
-	services.SaveRefCodeInfo(request)
+	if err := services.SaveRefCodeInfo(request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"msg":     err.Error(),
+			"success": false,
+		})
+	}
 	return c.JSON(fiber.Map{
 		"msg":     "ok",
 		"success": true,
 	})
 }
 
-// func RefCodeCounter(c *fiber.Ctx) error {
-// 	tableCodeUsed := new(models.RefCodeUsed)
-// 	tableCodeUsed.RefCode = utils.String2Int64(c.Query("code"))
-// 	currentTime := time.Now()
-// 	oneMinuteAgo := currentTime.Add(-2 * time.Minute)
-// 	count, _ := tableCodeUsed.CountDocumentsByTime(
-// 		oneMinuteAgo.UTC(),
-// 		currentTime.UTC(),
-// 	)
-// 	return c.JSON(fiber.Map{
-// 		"msg":     count,
-// 		"success": true,
-// 	})
-// }
+func RefCodeTracking(c *fiber.Ctx) error {
+	address := c.Params("address", "NONE")
+	if address == "NONE" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"data":    nil,
+			"msg":     "address is required",
+			"success": false,
+		})
+	}
+	resp, err := services.RefCodeTracking(address)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"msg":     err.Error(),
+			"data":    nil,
+			"success": false,
+		})
+	}
+	return c.JSON(fiber.Map{
+		"msg": "ok",
+		"data": fiber.Map{
+			"count": resp.Count,
+			"rate":  resp.Rate,
+			"level": resp.Level,
+		},
+		"success": true,
+	})
+}
+
+//func Test(c *fiber.Ctx) error {
+//	address := common.HexToAddress(configs.ContractAddr)
+//	refCode, _ := contract.NewRefCode(address, blockchain.GetClient())
+//	//addr := common.HexToAddress("0x8f9d9aA7B313cf9360d4E61D1Ae809443f97aCad")
+//	//refCode.UploadSingleData(blockchain.NewTransactOpts(&configs.TransactOptsConfig{
+//	//	ChainID:    11155111,
+//	//	PrivateKey: "5d935ba1a8c41db1f4c5aa8db93a9e0d429d9832b1004623a93e197df65d7ab2",
+//	//}), addr, big.NewInt(0.1*1e18))
+//	//refCode.Withdraw(blockchain.NewTransactOpts(&configs.TransactOptsConfig{
+//	//	ChainID:    11155111,
+//	//	PrivateKey: "5d935ba1a8c41db1f4c5aa8db93a9e0d429d9832b1004623a93e197df65d7ab2",
+//	//}), big.NewInt(0.05*1e18))
+//	//return c.JSON(fiber.Map{
+//	//	"success": true,
+//	//})
+//}

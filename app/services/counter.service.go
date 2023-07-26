@@ -12,7 +12,7 @@ func RefCodeCounter(code string) {
 		constants.MsgRefCodeCounter,
 		[]byte(code),
 	); err != nil {
-		log.Fatal("[COUNTER] Failed to publish msg " + err.Error())
+		log.Fatal("[COUNTER #1] Failed to publish msg " + err.Error())
 	}
-	log.Println("[SERVICES] Publishing to queue ...")
+	log.Println("[SERVICES #1] Publishing to queue ...")
 }

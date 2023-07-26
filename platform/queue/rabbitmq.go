@@ -17,7 +17,7 @@ var lock sync.Mutex
 
 func init() {
 	var err error
-	conn, err = amqp.Dial(configs.BROKER_URL)
+	conn, err = amqp.Dial(configs.BrokerUrl)
 	if err != nil {
 		log.Fatal("[RabbitMQ] Cannot connect to RabbitMQ Server: " + err.Error())
 	}

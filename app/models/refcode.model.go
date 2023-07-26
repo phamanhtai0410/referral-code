@@ -43,6 +43,21 @@ func (ref *RefCode) FindByAddress(address string) (int64, error) {
 	return result.RefCode, nil
 }
 
+func (ref *RefCode) FindDocsByAddress(address string) (*RefCode, error) {
+	var result = new(RefCode)
+	collections := database.GetCollection(tableDetails)
+	ctx, _ := database.NewContext()
+	filter := bson.D{{"address", address}}
+	err := collections.FindOne(ctx, filter).Decode(result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, err
+		}
+		log.Fatal("[MODEL] ", err)
+	}
+	return result, nil
+}
+
 func (ref *RefCode) IsExits(code string) (int64, bool) {
 	var result RefCode
 	collection := database.GetCollection(tableDetails)

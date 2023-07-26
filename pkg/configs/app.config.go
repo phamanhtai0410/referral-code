@@ -9,38 +9,38 @@ import (
 )
 
 var (
-	StageStatus         string
-	SERVER_HOST         string
-	SERVER_PORT         int
-	SERVER_READ_TIMEOUT int
+	StageStatus string
+	_           string
+	_           int
+	_           int
 
-	// JWT settings:
-	JWT_SECRET_KEY                      string
-	JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT int
-	JWT_REFRESH_KEY                     string
-	JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT  int
+	_ string
+	_ int
+	_ string
+	_ int
 
-	// Database settings:
-	DB_TYPE                     string
-	DB_HOST                     string
-	DB_PORT                     int
-	DB_USER                     string
-	DB_PASSWORD                 string
-	DB_NAME                     string
-	DB_SSL_MODE                 string
-	DB_MAX_CONNECTIONS          int
-	DB_MAX_IDLE_CONNECTIONS     int
-	DB_MAX_LIFETIME_CONNECTIONS int
+	DbType string
+	DbHost string
+	DbPort int
+	_      string
+	_      string
+	DbName string
+	_      string
+	_      int
+	_      int
+	_      int
 
-	// Redis settings:
-	REDIS_HOST      string
-	REDIS_PORT      int
-	REDIS_PASSWORD  string
-	REDIS_DB_NUMBER int
-	REDIS_URL       string
+	_ string
+	_ int
+	_ string
+	_ int
+	_ string
 
-	// Message queue:
-	BROKER_URL string
+	BrokerUrl string
+
+	BlockChainRPC string
+	ChainID       int
+	ContractAddr  string
 )
 
 func convertEnvToInt(key string) int {
@@ -54,27 +54,35 @@ func convertEnvToInt(key string) int {
 
 func init() {
 	StageStatus = os.Getenv("STAGE_STATUS")
-	SERVER_HOST = os.Getenv("SERVER_HOST")
-	SERVER_PORT = convertEnvToInt("SERVER_PORT")
-	SERVER_READ_TIMEOUT = convertEnvToInt("SERVER_READ_TIMEOUT")
-	JWT_SECRET_KEY = os.Getenv("JWT_SECRET_KEY")
-	JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT = convertEnvToInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT")
-	JWT_REFRESH_KEY = os.Getenv("JWT_REFRESH_KEY")
-	JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT = convertEnvToInt("JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT")
-	DB_TYPE = os.Getenv("DB_TYPE")
-	DB_HOST = os.Getenv("DB_HOST")
-	DB_PORT = convertEnvToInt("DB_PORT")
-	DB_USER = os.Getenv("DB_USER")
-	DB_PASSWORD = os.Getenv("DB_PASSWORD")
-	DB_NAME = os.Getenv("DB_NAME")
-	DB_SSL_MODE = os.Getenv("DB_SSL_MODE")
-	DB_MAX_CONNECTIONS = convertEnvToInt("DB_MAX_CONNECTIONS")
-	DB_MAX_IDLE_CONNECTIONS = convertEnvToInt("DB_MAX_IDLE_CONNECTIONS")
-	DB_MAX_LIFETIME_CONNECTIONS = convertEnvToInt("DB_MAX_LIFETIME_CONNECTIONS")
-	REDIS_HOST = os.Getenv("REDIS_HOST")
-	REDIS_PORT = convertEnvToInt("REDIS_PORT")
-	REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
-	REDIS_DB_NUMBER = convertEnvToInt("REDIS_DB_NUMBER")
-	BROKER_URL = os.Getenv("BROKER_URL")
-	REDIS_URL = os.Getenv("REDIS_URL")
+	_ = os.Getenv("SERVER_HOST")
+	_ = convertEnvToInt("SERVER_PORT")
+	_ = convertEnvToInt("SERVER_READ_TIMEOUT")
+	_ = os.Getenv("JWT_SECRET_KEY")
+	_ = convertEnvToInt("JWT_SECRET_KEY_EXPIRE_MINUTES_COUNT")
+	_ = os.Getenv("JWT_REFRESH_KEY")
+	_ = convertEnvToInt("JWT_REFRESH_KEY_EXPIRE_HOURS_COUNT")
+	DbType = os.Getenv("DB_TYPE")
+	DbHost = os.Getenv("DB_HOST")
+	DbPort = convertEnvToInt("DB_PORT")
+	_ = os.Getenv("DB_USER")
+	_ = os.Getenv("DB_PASSWORD")
+	DbName = os.Getenv("DB_NAME")
+	_ = os.Getenv("DB_SSL_MODE")
+	_ = convertEnvToInt("DB_MAX_CONNECTIONS")
+	_ = convertEnvToInt("DB_MAX_IDLE_CONNECTIONS")
+	_ = convertEnvToInt("DB_MAX_LIFETIME_CONNECTIONS")
+	_ = os.Getenv("REDIS_HOST")
+	_ = convertEnvToInt("REDIS_PORT")
+	_ = os.Getenv("REDIS_PASSWORD")
+	_ = convertEnvToInt("REDIS_DB_NUMBER")
+	BrokerUrl = os.Getenv("BROKER_URL")
+	_ = os.Getenv("REDIS_URL")
+	BlockChainRPC = os.Getenv("BLOCKCHAIN_RPC")
+	ChainID = convertEnvToInt("CHAIN_ID")
+	ContractAddr = os.Getenv("CONTRACT_ADDR")
+}
+
+type TransactOptsConfig struct {
+	PrivateKey string `json:"private_key"`
+	ChainID    int64  `json:"chain_id"`
 }

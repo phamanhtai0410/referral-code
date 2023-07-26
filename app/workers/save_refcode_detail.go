@@ -17,7 +17,7 @@ func SaveRefCode(msg *amqp.Delivery) {
 		req := new(schemas.RefCodeRequest)
 		err := json.Unmarshal(msg.Body, req)
 		if err != nil {
-			log.Fatal("failed to decode refcode: ", err)
+			log.Fatal("[WORKER #3] failed to decode refcode: ", err)
 		}
 		model := models.RefCode{
 			RefCode: req.RefCode,
