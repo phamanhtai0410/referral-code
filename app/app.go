@@ -35,6 +35,7 @@ type backgroundTask func()
 
 func New() IApp {
 	config := configs.FiberConfig()
+	cache.Init()
 	return &_App{
 		engine: fiber.New(config),
 	}

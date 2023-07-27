@@ -15,7 +15,7 @@ import (
 )
 
 func GenRefCode(address string) int64 {
-	var refcode models.RefCode
+	var refcode models.User
 	code, _ := refcode.FindByAddress(address)
 	if code == -1 {
 		val, err := cache.Incr(constants.CacheCounter)
@@ -25,9 +25,9 @@ func GenRefCode(address string) int64 {
 		code = val
 		// SaveRefCode(&schemas.RefCodeRequest{
 		// 	Address: address,
-		// 	RefCode: val,
+		// 	User: val,
 		// })
-		model := models.RefCode{
+		model := models.User{
 			RefCode: val,
 			Address: address,
 			Created: time.Now().UTC(),
@@ -88,30 +88,17 @@ func SaveRefCode(req *schemas.RefCodeRequest) {
 }
 
 func RefCodeTracking(address string) (*schemas.TrackingResponse, error) {
-	model := models.RefCode{
+	model := models.User{
 		Address: address,
 	}
-	code, err := model.FindDocsByAddress(address)
+	user, err := model.FindDocsByAddress(address)
 	if err != nil {
 		return nil, err
 	}
 	resp := new(schemas.TrackingResponse)
-	if code.Counter > 0 && code.Counter <= 30 {
-		resp.Rate = 0.1
-		resp.Level = "Standard"
-	} else if code.Counter >= 31 && code.Counter <= 100 {
-		resp.Rate = 0.2
-		resp.Level = "Level I"
-	} else if code.Counter >= 101 && code.Counter <= 1000 {
-		resp.Rate = 0.3
-		resp.Level = "Level II"
-	} else if code.Counter >= 1001 && code.Counter <= 5000 {
-		resp.Rate = 0.5
-		resp.Level = "Level III"
-	} else {
-		resp.Rate = 0.7
-		resp.Level = "Level IV"
-	}
-	resp.Count = code.Counter
+	resp.Count = user.Counter
+	resp.Rate = user.Rate
+	resp.Level = user.Level
+	resp.WithdrawAvailable = user.WithdrawAvailable
 	return resp, nil
 }

@@ -83,27 +83,19 @@ func RefCodeTracking(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"msg": "ok",
 		"data": fiber.Map{
-			"count": resp.Count,
-			"rate":  resp.Rate,
-			"level": resp.Level,
+			"count":              resp.Count,
+			"rate":               resp.Rate,
+			"level":              resp.Level,
+			"withdraw_available": resp.WithdrawAvailable,
 		},
 		"success": true,
 	})
 }
 
 //func Test(c *fiber.Ctx) error {
-//	address := common.HexToAddress(configs.ContractAddr)
-//	refCode, _ := contract.NewRefCode(address, blockchain.GetClient())
-//	//addr := common.HexToAddress("0x8f9d9aA7B313cf9360d4E61D1Ae809443f97aCad")
-//	//refCode.UploadSingleData(blockchain.NewTransactOpts(&configs.TransactOptsConfig{
-//	//	ChainID:    11155111,
-//	//	PrivateKey: "5d935ba1a8c41db1f4c5aa8db93a9e0d429d9832b1004623a93e197df65d7ab2",
-//	//}), addr, big.NewInt(0.1*1e18))
-//	//refCode.Withdraw(blockchain.NewTransactOpts(&configs.TransactOptsConfig{
-//	//	ChainID:    11155111,
-//	//	PrivateKey: "5d935ba1a8c41db1f4c5aa8db93a9e0d429d9832b1004623a93e197df65d7ab2",
-//	//}), big.NewInt(0.05*1e18))
-//	//return c.JSON(fiber.Map{
-//	//	"success": true,
-//	//})
+//	codeUsedModel := new(models.CodeUsed)
+//	records, err := codeUsedModel.GetDocumentsByTime(
+//		oneMinuteAgo.UTC(),
+//		currentTime.UTC(),
+//	)
 //}

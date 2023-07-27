@@ -11,25 +11,28 @@ import (
 )
 
 const (
-	tableDetails string = "code-detail"
+	tableDetails string = "user-detail"
 )
 
-type RefCode struct {
-	Created time.Time `json:"created"`
-	RefCode int64     `json:"refcode"`
-	Address string    `json:"address"`
-	Counter int64     `json:"counter"`
+type User struct {
+	Created           time.Time `json:"created"`
+	RefCode           int64     `json:"refcode"`
+	Address           string    `json:"address"`
+	Counter           int64     `json:"counter"`
+	Level             string    `json:"level"`
+	Rate              float64   `json:"rate"`
+	WithdrawAvailable float64   `json:"withdraw_available" bson:"withdraw_available"`
 }
 
-func (ref *RefCode) Save() error {
+func (ref *User) Save() error {
 	collection := database.GetCollection(tableDetails)
 	ctx, _ := database.NewContext()
 	_, err := collection.InsertOne(ctx, *ref)
 	return err
 }
 
-func (ref *RefCode) FindByAddress(address string) (int64, error) {
-	var result RefCode
+func (ref *User) FindByAddress(address string) (int64, error) {
+	var result User
 	collections := database.GetCollection(tableDetails)
 	ctx, _ := database.NewContext()
 	filter := bson.D{{"address", address}}
@@ -43,8 +46,8 @@ func (ref *RefCode) FindByAddress(address string) (int64, error) {
 	return result.RefCode, nil
 }
 
-func (ref *RefCode) FindDocsByAddress(address string) (*RefCode, error) {
-	var result = new(RefCode)
+func (ref *User) FindDocsByAddress(address string) (*User, error) {
+	var result = new(User)
 	collections := database.GetCollection(tableDetails)
 	ctx, _ := database.NewContext()
 	filter := bson.D{{"address", address}}
@@ -58,8 +61,8 @@ func (ref *RefCode) FindDocsByAddress(address string) (*RefCode, error) {
 	return result, nil
 }
 
-func (ref *RefCode) IsExits(code string) (int64, bool) {
-	var result RefCode
+func (ref *User) IsExits(code string) (int64, bool) {
+	var result User
 	collection := database.GetCollection(tableDetails)
 	filter := bson.D{{"refcode", code}}
 	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
@@ -70,7 +73,7 @@ func (ref *RefCode) IsExits(code string) (int64, bool) {
 	return result.Counter, true
 }
 
-func (ref *RefCode) UpdateCounter(counter int64) error {
+func (ref *User) UpdateCounter(counter int64) error {
 	collection := database.GetCollection(tableDetails)
 	filter := bson.M{"refcode": ref.RefCode}
 	update := bson.M{
@@ -82,9 +85,28 @@ func (ref *RefCode) UpdateCounter(counter int64) error {
 	return err
 }
 
-func (ref *RefCode) GetAllRecords() ([]RefCode, error) {
+func (ref *User) UpdateRecord(
+	refcode, counter int64,
+	withdrawAvailable, rate float64,
+	level string,
+) error {
 	collection := database.GetCollection(tableDetails)
-	var codes []RefCode
+	filter := bson.M{"refcode": refcode}
+	update := bson.M{
+		"$set": bson.M{
+			"counter":            counter,
+			"level":              level,
+			"rate":               rate,
+			"withdraw_available": withdrawAvailable,
+		},
+	}
+	_, err := collection.UpdateOne(context.TODO(), filter, update)
+	return err
+}
+
+func (ref *User) GetAllRecords() ([]User, error) {
+	collection := database.GetCollection(tableDetails)
+	var codes []User
 
 	cursor, err := collection.Find(context.TODO(), bson.D{})
 	if err != nil {
@@ -93,7 +115,7 @@ func (ref *RefCode) GetAllRecords() ([]RefCode, error) {
 	defer cursor.Close(context.TODO())
 
 	for cursor.Next(context.TODO()) {
-		var code RefCode
+		var code User
 		if err := cursor.Decode(&code); err != nil {
 			return nil, err
 		}

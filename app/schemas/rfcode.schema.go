@@ -23,7 +23,8 @@ type RefCodeCounterRequest struct {
 }
 
 type TrackingResponse struct {
-	Count int64   `json:"count"`
-	Level string  `json:"level"`
-	Rate  float32 `json:"rate"`
+	Count             int64   `json:"count"`
+	Level             string  `json:"level"`
+	Rate              float64 `json:"rate"`
+	WithdrawAvailable float64 `json:"withdraw_available"`
 }

@@ -19,11 +19,14 @@ func SaveRefCode(msg *amqp.Delivery) {
 		if err != nil {
 			log.Fatal("[WORKER #3] failed to decode refcode: ", err)
 		}
-		model := models.RefCode{
-			RefCode: req.RefCode,
-			Address: req.Address,
-			Created: time.Now().UTC(),
-			Counter: 0,
+		model := models.User{
+			RefCode:           req.RefCode,
+			Address:           req.Address,
+			Created:           time.Now().UTC(),
+			Counter:           0,
+			Rate:              0,
+			WithdrawAvailable: 0,
+			Level:             "",
 		}
 		err = model.Save()
 		if err != nil {

@@ -45,8 +45,6 @@ func main() {
 	// register workers
 	_app.Worker(
 		workers.SaveRefCodeUsed,
-		// workers.SaveRefCode,
-		//tasks.RefCodeCounterUsed,
 	)
 
 	// register middleware

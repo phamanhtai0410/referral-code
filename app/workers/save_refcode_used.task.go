@@ -18,7 +18,7 @@ func SaveRefCodeUsed(msg *amqp.Delivery) {
 		if err != nil {
 			log.Fatal("[WORKER #4] failed to decode refcode info: ", err)
 		}
-		model := models.RefCodeUsed{
+		model := models.CodeUsed{
 			RefCode: req.RefCode,
 			Domain:  req.Domain,
 			Price:   req.Price,
