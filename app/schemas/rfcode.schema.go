@@ -23,6 +23,7 @@ type RefCodeCounterRequest struct {
 }
 
 type TrackingResponse struct {
+	RefCode           int64   `json:"referral_code"`
 	Count             int64   `json:"count"`
 	Level             string  `json:"level"`
 	Rate              float64 `json:"rate"`

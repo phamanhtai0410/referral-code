@@ -100,5 +100,6 @@ func RefCodeTracking(address string) (*schemas.TrackingResponse, error) {
 	resp.Rate = user.Rate
 	resp.Level = user.Level
 	resp.WithdrawAvailable = user.WithdrawAvailable
+	resp.RefCode = user.RefCode
 	return resp, nil
 }

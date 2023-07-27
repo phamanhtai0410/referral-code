@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"log"
+
 	"example.com/refcode/v1/app/schemas"
 	"example.com/refcode/v1/app/services"
 	"example.com/refcode/v1/pkg/constants"
 	"github.com/gofiber/fiber/v2"
-	"log"
 )
 
 // RefCodeGenerate Generate RefCode.
@@ -83,6 +84,7 @@ func RefCodeTracking(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"msg": "ok",
 		"data": fiber.Map{
+			"referral_code":      resp.RefCode,
 			"count":              resp.Count,
 			"rate":               resp.Rate,
 			"level":              resp.Level,
