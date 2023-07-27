@@ -17,7 +17,7 @@ import (
 // @Success 200 {object} models.RefCode
 // @Router /refcode/gen [GET]
 func RefCodeGenerate(c *fiber.Ctx) error {
-	address := c.Query("address", "NONE")
+	address := c.Params("address", "NONE")
 	if address == "NONE" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    nil,
