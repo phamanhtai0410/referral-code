@@ -22,7 +22,7 @@ import (
 
 var client *redis.Client
 
-func Init() {
+func init() {
 	// Define Redis database number.
 	dbNumber, _ := strconv.Atoi(os.Getenv("REDIS_DB_NUMBER"))
 
@@ -42,7 +42,7 @@ func Init() {
 	_, err = client.Get(context.TODO(), constants.CacheCounter).Int64()
 	if err == redis.Nil {
 		var latest models.User
-		collection := database.GetCollection("code-details")
+		collection := database.GetCollection(models.TableDetails)
 		options := options.FindOne().SetSort(bson.M{"refcode": -1})
 		err = collection.FindOne(context.TODO(), bson.M{}, options).Decode(&latest)
 		if err != nil {

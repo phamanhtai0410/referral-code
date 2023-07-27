@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	tableDetails string = "user-detail"
+	TableDetails string = "user-detail"
 )
 
 type User struct {
@@ -25,7 +25,7 @@ type User struct {
 }
 
 func (ref *User) Save() error {
-	collection := database.GetCollection(tableDetails)
+	collection := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
 	_, err := collection.InsertOne(ctx, *ref)
 	return err
@@ -33,7 +33,7 @@ func (ref *User) Save() error {
 
 func (ref *User) FindByAddress(address string) (int64, error) {
 	var result User
-	collections := database.GetCollection(tableDetails)
+	collections := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
 	filter := bson.D{{"address", address}}
 	err := collections.FindOne(ctx, filter).Decode(&result)
@@ -48,7 +48,7 @@ func (ref *User) FindByAddress(address string) (int64, error) {
 
 func (ref *User) FindDocsByAddress(address string) (*User, error) {
 	var result = new(User)
-	collections := database.GetCollection(tableDetails)
+	collections := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
 	filter := bson.D{{"address", address}}
 	err := collections.FindOne(ctx, filter).Decode(result)
@@ -63,7 +63,7 @@ func (ref *User) FindDocsByAddress(address string) (*User, error) {
 
 func (ref *User) IsExits(code string) (int64, bool) {
 	var result User
-	collection := database.GetCollection(tableDetails)
+	collection := database.GetCollection(TableDetails)
 	filter := bson.D{{"refcode", code}}
 	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -74,7 +74,7 @@ func (ref *User) IsExits(code string) (int64, bool) {
 }
 
 func (ref *User) UpdateCounter(counter int64) error {
-	collection := database.GetCollection(tableDetails)
+	collection := database.GetCollection(TableDetails)
 	filter := bson.M{"refcode": ref.RefCode}
 	update := bson.M{
 		"$set": bson.M{
@@ -90,7 +90,7 @@ func (ref *User) UpdateRecord(
 	withdrawAvailable, rate float64,
 	level string,
 ) error {
-	collection := database.GetCollection(tableDetails)
+	collection := database.GetCollection(TableDetails)
 	filter := bson.M{"refcode": refcode}
 	update := bson.M{
 		"$set": bson.M{
@@ -105,7 +105,7 @@ func (ref *User) UpdateRecord(
 }
 
 func (ref *User) GetAllRecords() ([]User, error) {
-	collection := database.GetCollection(tableDetails)
+	collection := database.GetCollection(TableDetails)
 	var codes []User
 
 	cursor, err := collection.Find(context.TODO(), bson.D{})
