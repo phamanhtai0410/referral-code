@@ -43,7 +43,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 		err = userModel.UpdateRecord(
 			user.RefCode,
 			user.Counter+count,
-			rate*totalPrice,
+			rate*totalPrice+user.WithdrawAvailable,
 			rate,
 			level,
 		)
