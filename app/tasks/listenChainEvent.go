@@ -27,11 +27,11 @@ func ListenChainEvent() {
 			amount := vlog.Amount
 			log.Println("WITHDRAW EVENTS")
 			log.Printf("TO ADDRESS %s\n", vlog.Account.Hex())
-			log.Printf("AMOUNT %d\n", amount.Int64())
+			log.Printf("AMOUNT %f\n", float64(float64(amount.Int64())/float64(blockchain.EtherConst.Int64())))
 			log.Printf("REMAINING %s\n", vlog.Remaining.String())
 			history := models.WithdrawHistory{
 				Address: vlog.Account.Hex(),
-				Amount:  float64(amount.Int64() / blockchain.EtherConst.Int64()),
+				Amount:  float64(float64(amount.Int64()) / float64(blockchain.EtherConst.Int64())),
 				Created: time.Now().UTC(),
 			}
 			err = history.Save()
