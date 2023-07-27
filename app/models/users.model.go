@@ -16,6 +16,7 @@ const (
 
 type User struct {
 	Created           time.Time `json:"created"`
+	LastUpdated       time.Time `json:"last_updated" bson:"last_updated"`
 	RefCode           int64     `json:"refcode"`
 	Address           string    `json:"address"`
 	Counter           int64     `json:"counter"`
@@ -25,6 +26,7 @@ type User struct {
 }
 
 func (ref *User) Save() error {
+	ref.LastUpdated = time.Now().UTC()
 	collection := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
 	_, err := collection.InsertOne(ctx, *ref)
@@ -98,6 +100,7 @@ func (ref *User) UpdateRecord(
 			"level":              level,
 			"rate":               rate,
 			"withdraw_available": withdrawAvailable,
+			"last_updated":       time.Now().UTC(),
 		},
 	}
 	_, err := collection.UpdateOne(context.TODO(), filter, update)
