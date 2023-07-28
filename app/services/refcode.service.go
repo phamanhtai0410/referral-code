@@ -104,6 +104,7 @@ func RefCodeTracking(address string) (*schemas.TrackingResponse, error) {
 	// resp.Id = user.Id
 	// return resp, nil
 	return &schemas.TrackingResponse{
+		Id:                user.Id,
 		Count:             user.Counter,
 		Rate:              user.Rate,
 		Level:             user.Level,
