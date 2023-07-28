@@ -21,11 +21,11 @@ func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 		return -1, errors.New("domain already exists")
 	}
 	if id == -1 {
-		id, err := cache.Incr(constants.CacheCounter)
+		_id, err := cache.Incr(constants.CacheCounter)
 		if err != nil {
 			return -1, err
 		}
-		req.Id = id
+		req.Id = _id
 		data, err := json.Marshal(req)
 		if err != nil {
 			return -1, err
@@ -38,6 +38,7 @@ func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 			return -1, err
 		}
 		log.Println("[SERVICES #9] Publishing to queue ...")
+		return _id, nil
 	}
 	return id, nil
 }
