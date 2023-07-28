@@ -13,11 +13,12 @@ const (
 )
 
 type CodeUsed struct {
-	RefCode int64     `json:"refcode"`
-	Domain  string    `json:"domain"`
-	Price   float64   `json:"price"`
-	Address string    `json:"address"`
-	Created time.Time `bson:"created"`
+	Id           int64     `json:"id"`
+	ReferralCode string    `json:"referral_code" bson:"referral_code"`
+	Domain       string    `json:"domain"`
+	Price        float64   `json:"price"`
+	Address      string    `json:"address"`
+	Created      time.Time `bson:"created"`
 }
 
 func (r *CodeUsed) Save() error {
@@ -30,7 +31,7 @@ func (r *CodeUsed) Save() error {
 func (r *CodeUsed) CountDocumentsByTime(startTime, endTime time.Time) (int64, error) {
 	collection := database.GetCollection(tableCodeUsed)
 	filter := bson.M{
-		"refcode": r.RefCode,
+		"id": r.Id,
 		"created": bson.M{
 			"$gte": startTime,
 			"$lte": endTime,
@@ -48,7 +49,7 @@ func (r *CodeUsed) CountDocumentsByTime(startTime, endTime time.Time) (int64, er
 func (r *CodeUsed) GetDocumentsByTime(startTime, endTime time.Time) ([]CodeUsed, error) {
 	collection := database.GetCollection(tableCodeUsed)
 	filter := bson.M{
-		"refcode": r.RefCode,
+		"id": r.Id,
 		"created": bson.M{
 			"$gte": startTime,
 			"$lte": endTime,

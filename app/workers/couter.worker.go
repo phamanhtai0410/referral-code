@@ -21,7 +21,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 		log.Fatal("[WORKER #1] count number of ref codes ", err)
 	}
 	for _, user := range users {
-		codeUsedModel.RefCode = user.RefCode
+		codeUsedModel.Id = user.Id
 		records, err := codeUsedModel.GetDocumentsByTime(
 			oneMinuteAgo.UTC(),
 			currentTime.UTC(),
@@ -41,7 +41,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 			totalPrice += record.Price
 		}
 		err = userModel.UpdateRecord(
-			user.RefCode,
+			user.Id,
 			user.Counter+count,
 			rate*totalPrice+user.WithdrawAvailable,
 			rate,
@@ -50,7 +50,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 		if err != nil {
 			log.Fatal("[WORKER #3]", err)
 		}
-		logMsg := fmt.Sprintf("[WORKER #2] count number of ref codes %d: %d", user.RefCode, user.Counter+count)
+		logMsg := fmt.Sprintf("[WORKER #2] count number of ref codes %d: %d", user.Id, user.Counter+count)
 		log.Println(logMsg)
 	}
 }

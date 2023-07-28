@@ -17,19 +17,29 @@ import (
 // @Success 200 {object} models.RefCode
 // @Router /refcode/gen [GET]
 func RefCodeGenerate(c *fiber.Ctx) error {
-	address := c.Params("address", "NONE")
-	if address == "NONE" {
+	address := c.Query("address", "NONE")
+	domain := c.Query("domain", "NONE")
+	if address == "NONE" || domain == "NONE" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    nil,
-			"msg":     "address is required",
+			"msg":     "address, domain is required",
 			"success": false,
 		})
 	}
-	code := services.GenRefCode(address)
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"code":    code,
-		"msg":     "referral code generated",
-		"success": true,
+	if err := services.ReferralCodeHandle(&schemas.RefCodeRequest{
+		Address: address,
+		Domain:  domain,
+	}); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    nil,
+			"msg":     err.Error(),
+			"success": false,
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(schemas.RefCodeResponse{
+		Code:    domain,
+		Message: "referral code generated",
+		Success: true,
 	})
 }
 
@@ -83,8 +93,9 @@ func RefCodeTracking(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{
 		"msg": "ok",
+		"id":  resp.Id,
 		"data": fiber.Map{
-			"referral_code":      resp.RefCode,
+			"referral_code":      resp.ReferralCode,
 			"count":              resp.Count,
 			"rate":               resp.Rate,
 			"level":              resp.Level,

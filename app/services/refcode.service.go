@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"time"
 
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/platform/cache"
@@ -14,31 +13,27 @@ import (
 	"example.com/refcode/v1/platform/queue"
 )
 
-func GenRefCode(address string) int64 {
-	var refcode models.User
-	code, _ := refcode.FindByAddress(address)
-	if code == -1 {
-		val, err := cache.Incr(constants.CacheCounter)
-		if err != nil {
-			log.Fatal("[SERVICE #2] " + err.Error())
-		}
-		code = val
-		// SaveRefCode(&schemas.RefCodeRequest{
-		// 	Address: address,
-		// 	User: val,
-		// })
-		model := models.User{
-			RefCode: val,
-			Address: address,
-			Created: time.Now().UTC(),
-			Counter: 0,
-		}
-		err = model.Save()
-		if err != nil {
-			log.Fatal(constants.LogWorkerSaveCodeDetails, err)
-		}
+func ReferralCodeHandle(req *schemas.RefCodeRequest) error {
+
+	var user models.User
+	address := user.OwnerOf(req.Domain)
+	if address != "" && address != req.Address {
+		return errors.New("domain already exists")
 	}
-	return code
+
+	data, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	if err = queue.Publish(
+		constants.WorkerQueue,
+		constants.MsgSaveUserDetail,
+		data,
+	); err != nil {
+		return err
+	}
+	log.Println("[SERVICES #9] Publishing to queue ...")
+	return nil
 }
 
 func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
@@ -46,12 +41,8 @@ func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
 	if err != nil {
 		return err
 	}
-	if req.RefCode <= constants.CacheCounterBegin || req.RefCode > currentCode {
+	if req.Id <= constants.CacheCounterBegin || req.Id > currentCode {
 		return errors.New("referral code does not exist yet")
-	}
-	_, err = queue.NewQueue(constants.WorkerQueue)
-	if err != nil {
-		log.Fatal("[SERVICE #2] failed to create queue " + err.Error())
 	}
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -79,7 +70,7 @@ func SaveRefCode(req *schemas.RefCodeRequest) {
 	}
 	if err = queue.Publish(
 		constants.WorkerQueue,
-		constants.MsgSaveRefCodeDetail,
+		constants.MsgSaveUserDetail,
 		data,
 	); err != nil {
 		log.Fatal("[SERVICE #8] Failed to publish msg " + err.Error())
@@ -100,6 +91,7 @@ func RefCodeTracking(address string) (*schemas.TrackingResponse, error) {
 	resp.Rate = user.Rate
 	resp.Level = user.Level
 	resp.WithdrawAvailable = user.WithdrawAvailable
-	resp.RefCode = user.RefCode
+	resp.ReferralCode = user.ReferralCode
+	resp.Id = user.Id
 	return resp, nil
 }

@@ -48,7 +48,7 @@ func InitCodeCounter() {
 	if err == redis.Nil {
 		var latest models.User
 		collection := database.GetCollection(models.TableDetails)
-		options := options.FindOne().SetSort(bson.M{"refcode": -1})
+		options := options.FindOne().SetSort(bson.M{"id": -1})
 		err = collection.FindOne(context.TODO(), bson.M{}, options).Decode(&latest)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
@@ -57,7 +57,7 @@ func InitCodeCounter() {
 				log.Fatal("[REDIS #1]", err)
 			}
 		} else {
-			client.Set(context.TODO(), constants.CacheCounter, latest.RefCode, 0)
+			client.Set(context.TODO(), constants.CacheCounter, latest.Id, 0)
 		}
 
 	}

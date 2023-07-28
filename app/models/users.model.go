@@ -17,7 +17,8 @@ const (
 type User struct {
 	Created           time.Time `json:"created"`
 	LastUpdated       time.Time `json:"last_updated" bson:"last_updated"`
-	RefCode           int64     `json:"refcode"`
+	Id                int64     `json:"id"`
+	ReferralCode      string    `json:"referral_code" bson:"referral_code"`
 	Address           string    `json:"address"`
 	Counter           int64     `json:"counter"`
 	Level             string    `json:"level"`
@@ -45,7 +46,7 @@ func (ref *User) FindByAddress(address string) (int64, error) {
 		}
 		log.Fatal("[MODEL] ", err)
 	}
-	return result.RefCode, nil
+	return result.Id, nil
 }
 
 func (ref *User) FindDocsByAddress(address string) (*User, error) {
@@ -63,21 +64,38 @@ func (ref *User) FindDocsByAddress(address string) (*User, error) {
 	return result, nil
 }
 
-func (ref *User) IsExits(code string) (int64, bool) {
+func (ref *User) OwnerOf(domain string) string {
 	var result User
 	collection := database.GetCollection(TableDetails)
-	filter := bson.D{{"refcode", code}}
+	filter := bson.M{
+		"referral_code": domain,
+	}
 	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return -1, false
+			return ""
 		}
 	}
-	return result.Counter, true
+	return result.Address
+}
+
+func (ref *User) IsExits(address, domain string) bool {
+	var result User
+	collection := database.GetCollection(TableDetails)
+	filter := bson.M{
+		"address":       address,
+		"referral_code": domain,
+	}
+	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false
+		}
+	}
+	return true
 }
 
 func (ref *User) UpdateCounter(counter int64) error {
 	collection := database.GetCollection(TableDetails)
-	filter := bson.M{"refcode": ref.RefCode}
+	filter := bson.M{"id": ref.Id}
 	update := bson.M{
 		"$set": bson.M{
 			"counter": counter,
@@ -88,12 +106,12 @@ func (ref *User) UpdateCounter(counter int64) error {
 }
 
 func (ref *User) UpdateRecord(
-	refcode, counter int64,
+	id, counter int64,
 	withdrawAvailable, rate float64,
 	level string,
 ) error {
 	collection := database.GetCollection(TableDetails)
-	filter := bson.M{"refcode": refcode}
+	filter := bson.M{"id": id}
 	update := bson.M{
 		"$set": bson.M{
 			"counter":            counter,
