@@ -64,7 +64,7 @@ func (ref *User) FindDocsByAddress(address string) (*User, error) {
 	return result, nil
 }
 
-func (ref *User) OwnerOf(domain string) string {
+func (ref *User) OwnerOf(domain string) (string, int64) {
 	var result User
 	collection := database.GetCollection(TableDetails)
 	filter := bson.M{
@@ -72,10 +72,10 @@ func (ref *User) OwnerOf(domain string) string {
 	}
 	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return ""
+			return "", -1
 		}
 	}
-	return result.Address
+	return result.Address, result.Id
 }
 
 func (ref *User) IsExits(address, domain string) bool {

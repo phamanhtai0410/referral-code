@@ -16,28 +16,29 @@ import (
 func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 
 	var user models.User
-	address := user.OwnerOf(req.Domain)
+	address, id := user.OwnerOf(req.Domain)
 	if address != "" && address != req.Address {
 		return -1, errors.New("domain already exists")
 	}
-
-	id, err := cache.Incr(constants.CacheCounter)
-	if err != nil {
-		return -1, err
+	if id == -1 {
+		id, err := cache.Incr(constants.CacheCounter)
+		if err != nil {
+			return -1, err
+		}
+		req.Id = id
+		data, err := json.Marshal(req)
+		if err != nil {
+			return -1, err
+		}
+		if err = queue.Publish(
+			constants.WorkerQueue,
+			constants.MsgSaveUserDetail,
+			data,
+		); err != nil {
+			return -1, err
+		}
+		log.Println("[SERVICES #9] Publishing to queue ...")
 	}
-	req.Id = id
-	data, err := json.Marshal(req)
-	if err != nil {
-		return -1, err
-	}
-	if err = queue.Publish(
-		constants.WorkerQueue,
-		constants.MsgSaveUserDetail,
-		data,
-	); err != nil {
-		return -1, err
-	}
-	log.Println("[SERVICES #9] Publishing to queue ...")
 	return id, nil
 }
 
