@@ -39,7 +39,12 @@ func init() {
 		DB:       dbNumber,
 	}
 	client = redis.NewClient(option)
-	_, err = client.Get(context.TODO(), constants.CacheCounter).Int64()
+	InitCodeCounter()
+	log.Println("[REDIS] connection successful")
+}
+
+func InitCodeCounter() {
+	_, err := client.Get(context.TODO(), constants.CacheCounter).Int64()
 	if err == redis.Nil {
 		var latest models.User
 		collection := database.GetCollection(models.TableDetails)
@@ -56,8 +61,6 @@ func init() {
 		}
 
 	}
-
-	log.Println("[REDIS] connection successful")
 }
 
 func Shutdown() {
@@ -93,6 +96,7 @@ func IsUnique(code string) bool {
 }
 
 func Incr(key string) (int64, error) {
+	InitCodeCounter()
 	ctx, _ := database.NewContext()
 	return client.Incr(ctx, key).Result()
 }
