@@ -21,6 +21,9 @@ func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 		return -1, errors.New("domain already exists")
 	}
 	if id == -1 {
+		if user.WalletExists(req.Address) {
+			return -1, errors.New("address already exists")
+		}
 		_id, err := cache.Incr(constants.CacheCounter)
 		if err != nil {
 			return -1, err
@@ -44,13 +47,12 @@ func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 }
 
 func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
-	currentCode, err := cache.Get(constants.CacheCounter)
-	if err != nil {
-		return err
+	var user models.User
+	addr, id := user.OwnerOf(req.ReferralCode)
+	if addr == "" {
+		return errors.New("referral code does not exist")
 	}
-	if req.Id <= constants.CacheCounterBegin || req.Id > currentCode {
-		return errors.New("referral code does not exist yet")
-	}
+	req.Id = id
 	data, err := json.Marshal(req)
 	if err != nil {
 		log.Fatal("[SERVICE #3] failed to encode " + err.Error())

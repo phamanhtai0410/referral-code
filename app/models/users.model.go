@@ -93,6 +93,20 @@ func (ref *User) IsExits(address, domain string) bool {
 	return true
 }
 
+func (ref *User) WalletExists(address string) bool {
+	var result User
+	collection := database.GetCollection(TableDetails)
+	filter := bson.M{
+		"address": address,
+	}
+	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false
+		}
+	}
+	return true
+}
+
 func (ref *User) UpdateCounter(counter int64) error {
 	collection := database.GetCollection(TableDetails)
 	filter := bson.M{"id": ref.Id}

@@ -30,7 +30,6 @@ func RefCodeGenerate(c *fiber.Ctx) error {
 		Address: address,
 		Domain:  domain,
 	})
-
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    nil,
