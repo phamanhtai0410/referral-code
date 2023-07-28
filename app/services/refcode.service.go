@@ -95,12 +95,19 @@ func RefCodeTracking(address string) (*schemas.TrackingResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	resp := new(schemas.TrackingResponse)
-	resp.Count = user.Counter
-	resp.Rate = user.Rate
-	resp.Level = user.Level
-	resp.WithdrawAvailable = user.WithdrawAvailable
-	resp.ReferralCode = user.ReferralCode
-	resp.Id = user.Id
-	return resp, nil
+	// resp := new(schemas.TrackingResponse)
+	// resp.Count = user.Counter
+	// resp.Rate = user.Rate
+	// resp.Level = user.Level
+	// resp.WithdrawAvailable = user.WithdrawAvailable
+	// resp.ReferralCode = user.ReferralCode
+	// resp.Id = user.Id
+	// return resp, nil
+	return &schemas.TrackingResponse{
+		Count:             user.Counter,
+		Rate:              user.Rate,
+		Level:             user.Level,
+		WithdrawAvailable: user.WithdrawAvailable,
+		ReferralCode:      user.ReferralCode,
+	}, nil
 }

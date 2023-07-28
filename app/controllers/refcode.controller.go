@@ -14,7 +14,7 @@ import (
 // @Tags RefCode
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.RefCode
+// @Success 200 {object} models.User
 // @Router /refcode/gen [GET]
 func RefCodeGenerate(c *fiber.Ctx) error {
 	address := c.Query("address", "NONE")
@@ -53,7 +53,7 @@ func RefCodeGenerate(c *fiber.Ctx) error {
 // @Param refcode body number true "RefCode"
 // @Param domain body string true "Domain"
 // @Param price body number true "Price"
-// @Success 200 {object} models.RefCode
+// @Success 200 {object} models.CodeUsed
 // @Router /refcode/save [POST]
 func SaveRefCodeUsed(c *fiber.Ctx) error {
 	request := new(schemas.RefCodeUsedRequest)
@@ -76,6 +76,13 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 	})
 }
 
+// RefCodeTracking Tracking code
+// @Description Tracking code.
+// @Tags Tracking
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.User
+// @Router /tracking/:address [GET]
 func RefCodeTracking(c *fiber.Ctx) error {
 	address := c.Params("address", "NONE")
 	if address == "NONE" {
@@ -94,15 +101,8 @@ func RefCodeTracking(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(fiber.Map{
-		"msg": "ok",
-		"id":  resp.Id,
-		"data": fiber.Map{
-			"referral_code":      resp.ReferralCode,
-			"count":              resp.Count,
-			"rate":               resp.Rate,
-			"level":              resp.Level,
-			"withdraw_available": resp.WithdrawAvailable,
-		},
+		"msg":     "ok",
+		"data":    resp,
 		"success": true,
 	})
 }

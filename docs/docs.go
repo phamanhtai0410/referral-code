@@ -59,7 +59,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.RefCode"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -110,7 +110,29 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.RefCode"
+                            "$ref": "#/definitions/models.CodeUsed"
+                        }
+                    }
+                }
+            }
+        },
+        "/tracking/:address": {
+            "get": {
+                "description": "Tracking code.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tracking"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -118,7 +140,30 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.RefCode": {
+        "models.CodeUsed": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "referral_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
             "type": "object",
             "properties": {
                 "address": {
@@ -130,8 +175,23 @@ const docTemplate = `{
                 "created": {
                     "type": "string"
                 },
-                "refcode": {
+                "id": {
                     "type": "integer"
+                },
+                "last_updated": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "number"
+                },
+                "referral_code": {
+                    "type": "string"
+                },
+                "withdraw_available": {
+                    "type": "number"
                 }
             }
         }

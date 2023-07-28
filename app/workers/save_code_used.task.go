@@ -16,7 +16,7 @@ func SaveRefCodeUsed(msg *amqp.Delivery) {
 		req := new(schemas.RefCodeUsedRequest)
 		err := json.Unmarshal(msg.Body, req)
 		if err != nil {
-			log.Fatal("[WORKER #4] failed to decode refcode info: ", err)
+			log.Fatal("[WORKER #5] failed to decode refcode info: ", err)
 		}
 		model := models.CodeUsed{
 			ReferralCode: req.ReferralCode,

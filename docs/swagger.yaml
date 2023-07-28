@@ -1,6 +1,21 @@
 basePath: /api
 definitions:
-  models.RefCode:
+  models.CodeUsed:
+    properties:
+      address:
+        type: string
+      created:
+        type: string
+      domain:
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+      referral_code:
+        type: string
+    type: object
+  models.User:
     properties:
       address:
         type: string
@@ -8,8 +23,18 @@ definitions:
         type: integer
       created:
         type: string
-      refcode:
+      id:
         type: integer
+      last_updated:
+        type: string
+      level:
+        type: string
+      rate:
+        type: number
+      referral_code:
+        type: string
+      withdraw_available:
+        type: number
     type: object
 info:
   contact:
@@ -46,7 +71,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.RefCode'
+            $ref: '#/definitions/models.User'
       tags:
       - RefCode
   /refcode/save:
@@ -79,9 +104,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.RefCode'
+            $ref: '#/definitions/models.CodeUsed'
       tags:
       - User
+  /tracking/:address:
+    get:
+      consumes:
+      - application/json
+      description: Tracking code.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      tags:
+      - Tracking
 securityDefinitions:
   ApiKeyAuth:
     in: header

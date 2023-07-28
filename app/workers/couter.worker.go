@@ -50,7 +50,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 		if err != nil {
 			log.Fatal("[WORKER #3]", err)
 		}
-		logMsg := fmt.Sprintf("[WORKER #2] count number of ref codes %d: %d", user.Id, user.Counter+count)
+		logMsg := fmt.Sprintf("[WORKER #4] count number of ref codes %d: %d", user.Id, user.Counter+count)
 		log.Println(logMsg)
 	}
 }

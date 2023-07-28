@@ -18,7 +18,7 @@ func SaveUser(msg *amqp.Delivery) {
 		err := json.Unmarshal(msg.Body, req)
 
 		if err != nil {
-			log.Fatal("[WORKER #3] failed to decode refcode: ", err)
+			log.Fatal("[WORKER #6] failed to decode refcode: ", err)
 		}
 		model := models.User{
 			ReferralCode:      req.Domain,
