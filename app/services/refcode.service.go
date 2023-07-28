@@ -38,7 +38,7 @@ func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 		return -1, err
 	}
 	log.Println("[SERVICES #9] Publishing to queue ...")
-	return -1, nil
+	return id, nil
 }
 
 func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
