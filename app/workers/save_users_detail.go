@@ -7,7 +7,6 @@ import (
 
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/app/schemas"
-	"example.com/refcode/v1/platform/cache"
 	"github.com/streadway/amqp"
 
 	"example.com/refcode/v1/pkg/constants"
@@ -21,10 +20,9 @@ func SaveUser(msg *amqp.Delivery) {
 		if err != nil {
 			log.Fatal("[WORKER #3] failed to decode refcode: ", err)
 		}
-		id, _ := cache.Incr(constants.CacheCounter)
 		model := models.User{
 			ReferralCode:      req.Domain,
-			Id:                id,
+			Id:                req.Id,
 			Address:           req.Address,
 			Created:           time.Now().UTC(),
 			Counter:           0,

@@ -13,27 +13,32 @@ import (
 	"example.com/refcode/v1/platform/queue"
 )
 
-func ReferralCodeHandle(req *schemas.RefCodeRequest) error {
+func ReferralCodeHandle(req *schemas.RefCodeRequest) (int64, error) {
 
 	var user models.User
 	address := user.OwnerOf(req.Domain)
 	if address != "" && address != req.Address {
-		return errors.New("domain already exists")
+		return -1, errors.New("domain already exists")
 	}
 
+	id, err := cache.Incr(constants.CacheCounter)
+	if err != nil {
+		return -1, err
+	}
+	req.Id = id
 	data, err := json.Marshal(req)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	if err = queue.Publish(
 		constants.WorkerQueue,
 		constants.MsgSaveUserDetail,
 		data,
 	); err != nil {
-		return err
+		return -1, err
 	}
 	log.Println("[SERVICES #9] Publishing to queue ...")
-	return nil
+	return -1, nil
 }
 
 func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {

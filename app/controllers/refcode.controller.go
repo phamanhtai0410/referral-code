@@ -26,10 +26,12 @@ func RefCodeGenerate(c *fiber.Ctx) error {
 			"success": false,
 		})
 	}
-	if err := services.ReferralCodeHandle(&schemas.RefCodeRequest{
+	id, err := services.ReferralCodeHandle(&schemas.RefCodeRequest{
 		Address: address,
 		Domain:  domain,
-	}); err != nil {
+	})
+
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    nil,
 			"msg":     err.Error(),
@@ -37,6 +39,7 @@ func RefCodeGenerate(c *fiber.Ctx) error {
 		})
 	}
 	return c.Status(fiber.StatusOK).JSON(schemas.RefCodeResponse{
+		Id:      id,
 		Code:    domain,
 		Message: "referral code generated",
 		Success: true,

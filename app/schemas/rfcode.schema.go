@@ -1,6 +1,7 @@
 package schemas
 
 type RefCodeResponse struct {
+	Id      int64  `json:"id"`
 	Code    string `json:"referral_code"`
 	Message string `json:"message"`
 	Success bool   `json:"success"`
@@ -17,6 +18,7 @@ type RefCodeUsedRequest struct {
 type RefCodeRequest struct {
 	Domain  string `json:"domain"`
 	Address string `json:"address"`
+	Id      int64  `json:"id"`
 }
 
 type RefCodeCounterRequest struct {
