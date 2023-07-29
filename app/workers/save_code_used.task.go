@@ -20,7 +20,6 @@ func SaveRefCodeUsed(msg *amqp.Delivery) {
 		}
 		model := models.CodeUsed{
 			ReferralCode: req.ReferralCode,
-			Id:           req.Id,
 			Domain:       req.Domain,
 			Price:        req.Price,
 			Address:      req.Address,

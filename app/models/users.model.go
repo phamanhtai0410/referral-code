@@ -11,19 +11,17 @@ import (
 )
 
 const (
-	TableDetails string = "user-detail"
+	TableDetails string = "referral-code-detail"
 )
 
 type User struct {
-	Created           time.Time `json:"created"`
-	LastUpdated       time.Time `json:"last_updated" bson:"last_updated"`
-	Id                int64     `json:"id"`
-	ReferralCode      string    `json:"referral_code" bson:"referral_code"`
-	Address           string    `json:"address"`
-	Counter           int64     `json:"counter"`
-	Level             string    `json:"level"`
-	Rate              float64   `json:"rate"`
-	WithdrawAvailable float64   `json:"withdraw_available" bson:"withdraw_available"`
+	Created      time.Time `json:"created"`
+	LastUpdated  time.Time `json:"last_updated" bson:"last_updated"`
+	ReferralCode string    `json:"referral_code" bson:"referral_code"`
+	Counter      int64     `json:"counter"`
+	Level        string    `json:"level"`
+	Rate         float64   `json:"rate"`
+	TotalEarn    float64   `json:"total_earn" bson:"total_earn"`
 }
 
 func (ref *User) Save() error {
@@ -34,26 +32,11 @@ func (ref *User) Save() error {
 	return err
 }
 
-func (ref *User) FindByAddress(address string) (int64, error) {
-	var result User
-	collections := database.GetCollection(TableDetails)
-	ctx, _ := database.NewContext()
-	filter := bson.D{{"address", address}}
-	err := collections.FindOne(ctx, filter).Decode(&result)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return -1, err
-		}
-		log.Fatal("[MODEL] ", err)
-	}
-	return result.Id, nil
-}
-
-func (ref *User) FindDocsByAddress(address string) (*User, error) {
+func (ref *User) FindDocsByReferralCode(referralCode string) (*User, error) {
 	var result = new(User)
 	collections := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
-	filter := bson.D{{"address", address}}
+	filter := bson.D{{"referral_code", referralCode}}
 	err := collections.FindOne(ctx, filter).Decode(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -62,20 +45,6 @@ func (ref *User) FindDocsByAddress(address string) (*User, error) {
 		log.Fatal("[MODEL] ", err)
 	}
 	return result, nil
-}
-
-func (ref *User) OwnerOf(domain string) (string, int64) {
-	var result User
-	collection := database.GetCollection(TableDetails)
-	filter := bson.M{
-		"referral_code": domain,
-	}
-	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
-		if err == mongo.ErrNoDocuments {
-			return "", -1
-		}
-	}
-	return result.Address, result.Id
 }
 
 func (ref *User) IsExits(address, domain string) bool {
@@ -93,46 +62,21 @@ func (ref *User) IsExits(address, domain string) bool {
 	return true
 }
 
-func (ref *User) WalletExists(address string) bool {
-	var result User
-	collection := database.GetCollection(TableDetails)
-	filter := bson.M{
-		"address": address,
-	}
-	if err := collection.FindOne(context.TODO(), filter).Decode(&result); err != nil {
-		if err == mongo.ErrNoDocuments {
-			return false
-		}
-	}
-	return true
-}
-
-func (ref *User) UpdateCounter(counter int64) error {
-	collection := database.GetCollection(TableDetails)
-	filter := bson.M{"id": ref.Id}
-	update := bson.M{
-		"$set": bson.M{
-			"counter": counter,
-		},
-	}
-	_, err := collection.UpdateOne(context.TODO(), filter, update)
-	return err
-}
-
 func (ref *User) UpdateRecord(
-	id, counter int64,
-	withdrawAvailable, rate float64,
+	refCodeCondition string,
+	counter int64,
+	totalEarn, rate float64,
 	level string,
 ) error {
 	collection := database.GetCollection(TableDetails)
-	filter := bson.M{"id": id}
+	filter := bson.M{"referral_code": refCodeCondition}
 	update := bson.M{
 		"$set": bson.M{
-			"counter":            counter,
-			"level":              level,
-			"rate":               rate,
-			"withdraw_available": withdrawAvailable,
-			"last_updated":       time.Now().UTC(),
+			"counter":      counter,
+			"level":        level,
+			"rate":         rate,
+			"total_earn":   totalEarn,
+			"last_updated": time.Now().UTC(),
 		},
 	}
 	_, err := collection.UpdateOne(context.TODO(), filter, update)

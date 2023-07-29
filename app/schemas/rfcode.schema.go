@@ -9,7 +9,6 @@ type RefCodeResponse struct {
 
 type RefCodeUsedRequest struct {
 	ReferralCode string  `json:"referral_code"`
-	Id           int64   `json:"id"`
 	Domain       string  `json:"domain"`
 	Price        float64 `json:"price"`
 	Address      string  `json:"address"`
@@ -18,7 +17,6 @@ type RefCodeUsedRequest struct {
 type RefCodeRequest struct {
 	Domain  string `json:"domain"`
 	Address string `json:"address"`
-	Id      int64  `json:"id"`
 }
 
 type RefCodeCounterRequest struct {
@@ -26,10 +24,9 @@ type RefCodeCounterRequest struct {
 }
 
 type TrackingResponse struct {
-	ReferralCode      string  `json:"referral_code"`
-	Id                int64   `json:"id"`
-	Count             int64   `json:"count"`
-	Level             string  `json:"level"`
-	Rate              float64 `json:"rate"`
-	WithdrawAvailable float64 `json:"withdraw_available"`
+	ReferralCode string  `json:"referral_code"`
+	Count        int64   `json:"count"`
+	Level        string  `json:"level"`
+	Rate         float64 `json:"rate"`
+	TotalEarn    float64 `json:"total_earn"`
 }

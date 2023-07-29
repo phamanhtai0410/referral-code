@@ -6,9 +6,9 @@ import (
 )
 
 func RefCodeRoute(a *fiber.App) {
-	// route := a.Group("/refcode")
 	//a.Get("/test", controllers.Test)
-	a.Get("/get", controllers.RefCodeGenerate)
 	a.Post("/save/", controllers.SaveRefCodeUsed)
-	a.Get("/tracking/:address", controllers.RefCodeTracking)
+	a.Get("/tracking/:domain", controllers.RefCodeTracking)
+	a.Get("/history/:domain", controllers.WithdrawHistory)
+
 }

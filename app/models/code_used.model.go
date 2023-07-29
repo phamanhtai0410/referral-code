@@ -9,11 +9,10 @@ import (
 )
 
 const (
-	tableCodeUsed string = "code-used"
+	tableCodeUsed string = "referral-code-used"
 )
 
 type CodeUsed struct {
-	Id           int64     `json:"id"`
 	ReferralCode string    `json:"referral_code" bson:"referral_code"`
 	Domain       string    `json:"domain"`
 	Price        float64   `json:"price"`
@@ -28,28 +27,9 @@ func (r *CodeUsed) Save() error {
 	return err
 }
 
-func (r *CodeUsed) CountDocumentsByTime(startTime, endTime time.Time) (int64, error) {
-	collection := database.GetCollection(tableCodeUsed)
-	filter := bson.M{
-		"id": r.Id,
-		"created": bson.M{
-			"$gte": startTime,
-			"$lte": endTime,
-		},
-	}
-
-	count, err := collection.CountDocuments(context.TODO(), filter)
-	if err != nil {
-		return 0, err
-	}
-
-	return count, nil
-}
-
 func (r *CodeUsed) GetDocumentsByTime(startTime, endTime time.Time) ([]CodeUsed, error) {
 	collection := database.GetCollection(tableCodeUsed)
 	filter := bson.M{
-		"id": r.Id,
 		"created": bson.M{
 			"$gte": startTime,
 			"$lte": endTime,
@@ -71,7 +51,7 @@ func (r *CodeUsed) GetDocumentsByTime(startTime, endTime time.Time) ([]CodeUsed,
 		records = append(records, record)
 	}
 
-	if err := cursor.Err(); err != nil {
+	if err = cursor.Err(); err != nil {
 		return nil, err
 	}
 

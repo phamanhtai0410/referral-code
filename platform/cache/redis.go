@@ -1,20 +1,13 @@
 package cache
 
 import (
-	"context"
+	"example.com/refcode/v1/pkg/utils"
 	"log"
 	"os"
 	"strconv"
 	"time"
 
-	"example.com/refcode/v1/app/models"
-	"example.com/refcode/v1/pkg/constants"
-	"example.com/refcode/v1/pkg/utils"
 	"example.com/refcode/v1/platform/database"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
 	"github.com/redis/go-redis/v9"
 )
 
@@ -22,7 +15,7 @@ import (
 
 var client *redis.Client
 
-func init() {
+func Init() {
 	// Define Redis database number.
 	dbNumber, _ := strconv.Atoi(os.Getenv("REDIS_DB_NUMBER"))
 
@@ -39,28 +32,7 @@ func init() {
 		DB:       dbNumber,
 	}
 	client = redis.NewClient(option)
-	InitCodeCounter()
 	log.Println("[REDIS] connection successful")
-}
-
-func InitCodeCounter() {
-	_, err := client.Get(context.TODO(), constants.CacheCounter).Int64()
-	if err == redis.Nil {
-		var latest models.User
-		collection := database.GetCollection(models.TableDetails)
-		options := options.FindOne().SetSort(bson.M{"id": -1})
-		err = collection.FindOne(context.TODO(), bson.M{}, options).Decode(&latest)
-		if err != nil {
-			if err == mongo.ErrNoDocuments {
-				client.Set(context.TODO(), constants.CacheCounter, 111111, 0)
-			} else {
-				log.Fatal("[REDIS #1]", err)
-			}
-		} else {
-			client.Set(context.TODO(), constants.CacheCounter, latest.Id, 0)
-		}
-
-	}
 }
 
 func Shutdown() {
@@ -96,7 +68,6 @@ func IsUnique(code string) bool {
 }
 
 func Incr(key string) (int64, error) {
-	InitCodeCounter()
 	ctx, _ := database.NewContext()
 	return client.Incr(ctx, key).Result()
 }

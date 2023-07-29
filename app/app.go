@@ -8,7 +8,6 @@ import (
 	"example.com/refcode/v1/pkg/configs"
 	"example.com/refcode/v1/pkg/constants"
 	"example.com/refcode/v1/pkg/utils"
-	"example.com/refcode/v1/platform/cache"
 	"example.com/refcode/v1/platform/database"
 	"example.com/refcode/v1/platform/queue"
 	"github.com/gofiber/fiber/v2"
@@ -82,7 +81,7 @@ func (app *_App) Shutdown(sig <-chan os.Signal) {
 		fmt.Println()
 		queue.Shutdown()
 		database.Shutdown()
-		cache.Shutdown()
+		//cache.Shutdown()
 		if configs.StageStatus == "prod" {
 			log.Println("[SERVER] Server is shutting down ..")
 			if err := app.engine.Shutdown(); err != nil {

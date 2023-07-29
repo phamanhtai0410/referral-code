@@ -9,42 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// RefCodeGenerate Generate RefCode.
-// @Description Generate RefCode.
-// @Tags RefCode
-// @Accept json
-// @Produce json
-// @Success 200 {object} models.User
-// @Router /refcode/gen [GET]
-func RefCodeGenerate(c *fiber.Ctx) error {
-	address := c.Query("address", "NONE")
-	domain := c.Query("domain", "NONE")
-	if address == "NONE" || domain == "NONE" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"code":    nil,
-			"msg":     "address, domain is required",
-			"success": false,
-		})
-	}
-	id, err := services.ReferralCodeHandle(&schemas.RefCodeRequest{
-		Address: address,
-		Domain:  domain,
-	})
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"code":    nil,
-			"msg":     err.Error(),
-			"success": false,
-		})
-	}
-	return c.Status(fiber.StatusOK).JSON(schemas.RefCodeResponse{
-		Id:      id,
-		Code:    domain,
-		Message: "referral code generated",
-		Success: true,
-	})
-}
-
 // SaveRefCodeUsed Save to Database.
 // @Description Save RefCode to Database.
 // @Tags User
@@ -54,7 +18,7 @@ func RefCodeGenerate(c *fiber.Ctx) error {
 // @Param domain body string true "Domain"
 // @Param price body number true "Price"
 // @Success 200 {object} models.CodeUsed
-// @Router /refcode/save [POST]
+// @Router /save [POST]
 func SaveRefCodeUsed(c *fiber.Ctx) error {
 	request := new(schemas.RefCodeUsedRequest)
 	if err := c.BodyParser(request); err != nil {
@@ -84,15 +48,15 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 // @Success 200 {object} models.User
 // @Router /tracking/:address [GET]
 func RefCodeTracking(c *fiber.Ctx) error {
-	address := c.Params("address", "NONE")
-	if address == "NONE" {
+	domain := c.Params("domain", "NONE")
+	if domain == "NONE" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"data":    nil,
-			"msg":     "address is required",
+			"msg":     "domain is required",
 			"success": false,
 		})
 	}
-	resp, err := services.RefCodeTracking(address)
+	resp, err := services.RefCodeTracking(domain)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"msg":     err.Error(),
@@ -107,10 +71,26 @@ func RefCodeTracking(c *fiber.Ctx) error {
 	})
 }
 
-//func Test(c *fiber.Ctx) error {
-//	codeUsedModel := new(models.CodeUsed)
-//	records, err := codeUsedModel.GetDocumentsByTime(
-//		oneMinuteAgo.UTC(),
-//		currentTime.UTC(),
-//	)
-//}
+func WithdrawHistory(c *fiber.Ctx) error {
+	domain := c.Params("domain", "NONE")
+	if domain == "NONE" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"data":    nil,
+			"msg":     "domain is required",
+			"success": false,
+		})
+	}
+	resp, err := services.WithdrawHistory(domain)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"msg":     err.Error(),
+			"data":    nil,
+			"success": false,
+		})
+	}
+	return c.JSON(fiber.Map{
+		"msg":     "ok",
+		"data":    resp,
+		"success": true,
+	})
+}
