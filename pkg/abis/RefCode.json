@@ -48,6 +48,12 @@
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -105,8 +111,13 @@
             "type": "address"
           },
           {
+            "internalType": "string",
+            "name": "domain",
+            "type": "string"
+          },
+          {
             "internalType": "uint256",
-            "name": "totalSupply",
+            "name": "totalEarn",
             "type": "uint256"
           }
         ],
@@ -128,8 +139,13 @@
         "type": "address"
       },
       {
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
-        "name": "totalSupply",
+        "name": "totalEarn",
         "type": "uint256"
       }
     ],
