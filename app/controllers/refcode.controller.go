@@ -1,11 +1,8 @@
 package controllers
 
 import (
-	"log"
-
 	"example.com/refcode/v1/app/schemas"
 	"example.com/refcode/v1/app/services"
-	"example.com/refcode/v1/pkg/constants"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,15 +17,15 @@ import (
 // @Success 200 {object} models.CodeUsed
 // @Router /save [POST]
 func SaveRefCodeUsed(c *fiber.Ctx) error {
-	request := new(schemas.RefCodeUsedRequest)
-	if err := c.BodyParser(request); err != nil {
-		log.Printf("Error parsing request body: " + err.Error())
+	request, ok := c.Locals("/save").(schemas.RefCodeUsedRequest)
+	if !ok {
+		// Handle error (e.g., return an error response)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"msg":     constants.ErrorBodyParser,
+			"msg":     "Failed to get parsed data from context",
 			"success": false,
 		})
 	}
-	if err := services.SaveRefCodeInfo(request); err != nil {
+	if err := services.SaveRefCodeInfo(&request); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"msg":     err.Error(),
 			"success": false,
@@ -48,11 +45,11 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 // @Success 200 {object} models.User
 // @Router /tracking/:address [GET]
 func RefCodeTracking(c *fiber.Ctx) error {
-	domain := c.Params("domain", "NONE")
-	if domain == "NONE" {
+	domain, ok := c.Locals("domain").(string)
+	if !ok {
+		// Handle error (e.g., return an error response)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"data":    nil,
-			"msg":     "domain is required",
+			"msg":     "Failed to get parsed data from context",
 			"success": false,
 		})
 	}
@@ -72,11 +69,11 @@ func RefCodeTracking(c *fiber.Ctx) error {
 }
 
 func WithdrawHistory(c *fiber.Ctx) error {
-	domain := c.Params("domain", "NONE")
-	if domain == "NONE" {
+	domain, ok := c.Locals("domain").(string)
+	if !ok {
+		// Handle error (e.g., return an error response)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"data":    nil,
-			"msg":     "domain is required",
+			"msg":     "Failed to get parsed data from context",
 			"success": false,
 		})
 	}

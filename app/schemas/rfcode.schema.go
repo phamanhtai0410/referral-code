@@ -8,10 +8,10 @@ type RefCodeResponse struct {
 }
 
 type RefCodeUsedRequest struct {
-	ReferralCode string  `json:"referral_code"`
-	Domain       string  `json:"domain"`
-	Price        float64 `json:"price"`
-	Address      string  `json:"address"`
+	ReferralCode string  `json:"referral_code" validate:"required"`
+	Domain       string  `json:"domain" validate:"required"`
+	Price        float64 `json:"price" validate:"required"`
+	Address      string  `json:"address" validate:"required"`
 }
 
 type RefCodeRequest struct {
