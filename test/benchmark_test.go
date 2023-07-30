@@ -6,18 +6,15 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
-
-	"github.com/google/uuid"
 )
 
 func BenchmarkAPISAVE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		address := uuid.New().String()
 		requestBody := map[string]interface{}{
-			"refcode": 111182,
-			"domain":  "kawasaki.meme",
-			"price":   1.2,
-			"address": address,
+			"referral_code": "kawasaki.meme",
+			"domain":        "kawasaki696969.meme",
+			"price":         1.2,
+			"address":       "0x8f9d9aA7B313cf9360d4E61D1Ae809443f97aCad",
 		}
 
 		jsonData, _ := json.Marshal(requestBody)
