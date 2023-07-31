@@ -6,12 +6,11 @@ import (
 	"os"
 
 	"example.com/refcode/v1/pkg/configs"
-	"example.com/refcode/v1/pkg/constants"
 	"example.com/refcode/v1/pkg/utils"
+	"example.com/refcode/v1/pkg/workers"
 	"example.com/refcode/v1/platform/database"
 	"example.com/refcode/v1/platform/queue"
 	"github.com/gofiber/fiber/v2"
-	"github.com/streadway/amqp"
 )
 
 type _App struct {
@@ -19,7 +18,7 @@ type _App struct {
 }
 
 type IApp interface {
-	Worker(...worker)
+	Worker(*configs.Worker)
 	Middleware(...middleware) IApp
 	Route(...route) IApp
 	Run()
@@ -29,7 +28,6 @@ type IApp interface {
 
 type middleware func(*fiber.App)
 type route func(*fiber.App)
-type worker func(*amqp.Delivery)
 type backgroundTask func()
 
 func New() IApp {
@@ -45,20 +43,11 @@ func (app *_App) BackgroundTask(tasks ...backgroundTask) {
 	}
 }
 
-func (app *_App) workerExecute(msgs <-chan amqp.Delivery, workers ...worker) {
-	for msg := range msgs {
-		for _, worker := range workers {
-			go worker(&msg)
-		}
-	}
-}
-
-func (app *_App) Worker(workers ...worker) {
-	msgs, err := queue.Consume(constants.WorkerQueue)
+func (app *_App) Worker(cnf *configs.Worker) {
+	_, err := workers.StartServer(cnf)
 	if err != nil {
-		log.Fatal("failed to consume refcode info: ", err)
+		log.Fatal("workers srart error: ", err)
 	}
-	go app.workerExecute(msgs, workers...)
 }
 
 func (app *_App) Middleware(middlewares ...middleware) IApp {

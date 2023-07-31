@@ -98,7 +98,7 @@ func Delay(taskName string, fn interface{}, args ...interface{}) error {
 		Args: _args,
 	}
 
-	span, ctx := opentracing.StartSpanFromContext(context.Background(), "send")
+	span, ctx := opentracing.StartSpanFromContext(context.Background(), "delay")
 	defer span.Finish()
 
 	batchID := uuid.New().String()

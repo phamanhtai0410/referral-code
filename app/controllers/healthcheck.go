@@ -36,7 +36,7 @@ func HealthCheckWorker(c *fiber.Ctx) error {
 			},
 		},
 		Task: map[string]interface{}{
-			"healthcheck": tasks.HealthCheck,
+			"Worker.HealthCheck": tasks.HealthCheck,
 		},
 	}
 	workers.StartServer(cnf)

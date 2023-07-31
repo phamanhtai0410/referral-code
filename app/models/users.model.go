@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	TableDetails string = "referral-code-detail"
+	TableDetails string = "referral-code-detail-test"
 )
 
 type User struct {

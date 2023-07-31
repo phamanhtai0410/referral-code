@@ -1,14 +1,23 @@
-package workers
+package tasks
 
 import (
-	"example.com/refcode/v1/pkg/utils"
 	"log"
 	"time"
 
 	"example.com/refcode/v1/app/models"
-
 	"example.com/refcode/v1/pkg/constants"
+	"example.com/refcode/v1/pkg/utils"
+	"example.com/refcode/v1/pkg/workers"
 )
+
+func RefCodeCounterUsed() {
+	ticker := time.NewTicker(constants.JobSchedule * time.Minute)
+	defer ticker.Stop()
+	CountNumberOfRefCodeUsed(<-ticker.C)
+	for _time := range ticker.C {
+		go CountNumberOfRefCodeUsed(_time)
+	}
+}
 
 func CountNumberOfRefCodeUsed(_time time.Time) {
 	var codeUsedModel models.CodeUsed
@@ -35,27 +44,36 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 		user, errFind := userModel.FindDocsByReferralCode(key)
 		level, rate := utils.ReferralRule(int(val))
 		if errFind != nil { // No documents
-			newUser := models.User{
-				ReferralCode: key,
-				Counter:      val,
-				Level:        level,
-				Rate:         rate,
-				Created:      time.Now().UTC(),
-				LastUpdated:  time.Now().UTC(),
-				TotalEarn:    price[key] * rate,
-			}
-			err = newUser.Save()
+			err := workers.Delay(
+				"Worker.SaveUserInfo",
+				SaveUserInfo,
+				time.Now().UTC().Format("2006-01-02T15:04:05.999Z"),
+				time.Now().UTC().Format("2006-01-02T15:04:05.999Z"),
+				key,
+				level,
+				val,
+				rate,
+				float64(price[key]*rate),
+			)
 			if err != nil {
-				log.Fatal("[WORKER] " + err.Error())
+				log.Fatal(err)
 			}
 		} else {
 			if level == "" {
 				level = user.Level
 				rate = user.Rate
 			}
-			err = user.UpdateRecord(key, val+user.Counter, (price[key]*rate)+user.TotalEarn, rate, level)
+			err := workers.Delay(
+				"Worker.UpdateUserRecord",
+				UpdateUserRecord,
+				key,
+				val+user.Counter,
+				(price[key]*rate)+user.TotalEarn,
+				rate,
+				level,
+			)
 			if err != nil {
-				log.Fatal("[WORKER] " + err.Error())
+				log.Fatal(err)
 			}
 		}
 		log.Printf("referral code %s count: %d\n", key, val)
