@@ -79,9 +79,17 @@ func WithdrawHistory(c *fiber.Ctx) error {
 	}
 	resp, err := services.WithdrawHistory(domain)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		var status int
+		data := make([]interface{}, 0)
+		if err.Error() == "no data" {
+			status = fiber.StatusOK
+		} else {
+			status = fiber.StatusBadRequest
+			data = nil
+		}
+		return c.Status(status).JSON(fiber.Map{
 			"msg":     err.Error(),
-			"data":    nil,
+			"data":    data,
 			"success": false,
 		})
 	}
