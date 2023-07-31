@@ -1,14 +1,16 @@
 package services
 
 import (
+	"log"
+
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/app/schemas"
 	"example.com/refcode/v1/app/tasks"
 	"example.com/refcode/v1/pkg/workers"
 )
 
-func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
-	return workers.Delay(
+func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) {
+	err := workers.Delay(
 		"Worker.SaveCodeUsed",
 		tasks.SaveRefCodeUsed,
 		req.ReferralCode,
@@ -16,7 +18,9 @@ func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
 		req.Address,
 		req.Price,
 	)
-
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func RefCodeTracking(referralCode string) (*schemas.TrackingResponse, error) {

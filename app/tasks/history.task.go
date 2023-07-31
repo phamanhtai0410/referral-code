@@ -13,16 +13,16 @@ func SaveHistory(address, domain, created string, amount float64) error {
 	if err != nil {
 		return err
 	}
-	log.INFO.Println("WITHDRAW EVENTS")
-	log.INFO.Printf("TO ADDRESS %s\n", address)
-	log.INFO.Printf("AMOUNT %f\n", amount)
-	log.INFO.Printf("DOMAIN %s\n", domain)
+	log.DEBUG.Println("WITHDRAW EVENTS")
+	log.DEBUG.Printf("TO ADDRESS %s\n", address)
+	log.DEBUG.Printf("AMOUNT %f\n", amount)
+	log.DEBUG.Printf("DOMAIN %s\n", domain)
 	history := models.WithdrawHistory{
 		Address: address,
 		Amount:  amount,
 		Created: _created,
 		Domain:  domain,
 	}
-	log.INFO.Println("HISTORY SAVE OK")
+	log.DEBUG.Println("HISTORY SAVE OK")
 	return history.Save()
 }

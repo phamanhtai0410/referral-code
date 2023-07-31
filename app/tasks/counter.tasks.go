@@ -59,10 +59,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 				log.Fatal(err)
 			}
 		} else {
-			if level == "" {
-				level = user.Level
-				rate = user.Rate
-			}
+			level, rate = utils.ReferralRule(int(val + user.Counter))
 			err := workers.Delay(
 				"Worker.UpdateUserRecord",
 				UpdateUserRecord,

@@ -80,9 +80,9 @@ func main() {
 
 	cnf := &configs.Worker{
 		Config: &config.Config{
-			Broker:          "amqp://guest:guest@localhost:5672/",
+			Broker:          configs.BrokerUrl,
 			DefaultQueue:    "machinery_tasks",
-			ResultBackend:   "redis://localhost:6379/0",
+			ResultBackend:   configs.CacheUrl,
 			ResultsExpireIn: 3600,
 			AMQP: &config.AMQPConfig{
 				Exchange:      "machinery_exchange",
@@ -106,7 +106,7 @@ func main() {
 			Usage: "launch machinery worker",
 			Action: func(c *cli.Context) error {
 				log.Printf("start %s\n", c.Command.Name)
-				if err := workers.Execute(cnf, "consume", 1); err != nil {
+				if err := workers.Execute(cnf, "consume", 12); err != nil {
 					return cli.NewExitError(err.Error(), 1)
 				}
 				return nil

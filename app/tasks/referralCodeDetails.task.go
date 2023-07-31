@@ -13,7 +13,7 @@ func UpdateUserRecord(refCodeCondition string, counter int64, totalEarn float64,
 	if err != nil {
 		return err
 	}
-	log.INFO.Println("Update OK")
+	log.DEBUG.Println("Update OK")
 	return nil
 }
 
@@ -37,6 +37,6 @@ func SaveUserInfo(created, uploaded, referralCode, level string, counter int64, 
 		LastUpdated:  _uploaded,
 		TotalEarn:    totalEarn,
 	}
-	log.INFO.Println("SAVE OK")
+	log.DEBUG.Println("SAVE OK")
 	return newUser.Save()
 }

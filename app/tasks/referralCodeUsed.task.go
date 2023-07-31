@@ -16,6 +16,6 @@ func SaveRefCodeUsed(referralCode, domain, address string, price float64) error 
 		Address:      address,
 		Created:      time.Now().UTC(),
 	}
-	log.INFO.Println(constants.LogWorkerSaveCodeUsed+" INSERTED OK: ", model)
+	log.DEBUG.Println(constants.LogWorkerSaveCodeUsed+" INSERTED OK: ", model)
 	return model.Save()
 }
