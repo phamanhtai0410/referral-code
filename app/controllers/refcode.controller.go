@@ -49,16 +49,23 @@ func RefCodeTracking(c *fiber.Ctx) error {
 	if !ok {
 		// Handle error (e.g., return an error response)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"data":    nil,
 			"msg":     "Failed to get parsed data from context",
 			"success": false,
 		})
 	}
 	resp, err := services.RefCodeTracking(domain)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"msg":     err.Error(),
-			"data":    nil,
-			"success": false,
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"msg": "ok",
+			"data": schemas.TrackingResponse{
+				ReferralCode: domain,
+				Count:        0,
+				Level:        "",
+				Rate:         0,
+				TotalEarn:    0,
+			},
+			"success": true,
 		})
 	}
 	return c.JSON(fiber.Map{
