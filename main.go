@@ -5,10 +5,15 @@ import (
 	"os/signal"
 	"syscall"
 
-	"example.com/refcode/v1/app/tasks"
-	"example.com/refcode/v1/app/workers"
+	"log"
 
 	"example.com/refcode/v1/app"
+	"example.com/refcode/v1/app/tasks"
+	"example.com/refcode/v1/pkg/configs"
+	"example.com/refcode/v1/pkg/workers"
+	"github.com/RichardKnop/machinery/v1/config"
+	"github.com/urfave/cli"
+
 	_ "example.com/refcode/v1/docs" // load API Docs files (Swagger)
 	"example.com/refcode/v1/pkg/middleware"
 	"example.com/refcode/v1/pkg/routes"
@@ -27,8 +32,20 @@ import (
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-func main() {
 
+var (
+	client *cli.App
+)
+
+func init() {
+	// Initialise a CLI app
+	client = cli.NewApp()
+	client.Name = "machinery"
+	client.Usage = "machinery worker and send example tasks with machinery send"
+	client.Version = "0.0.0"
+}
+
+func startServer() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
@@ -40,11 +57,6 @@ func main() {
 	_app.BackgroundTask(
 		tasks.RefCodeCounterUsed,
 		tasks.ListenChainEvent,
-	)
-
-	// register workers
-	_app.Worker(
-		workers.SaveRefCodeUsed,
 	)
 
 	// register middleware
@@ -59,8 +71,52 @@ func main() {
 		routes.SwaggerRoute,
 		routes.NotFoundRoute,
 	)
-
-	// run application
 	_app.Run()
+}
+
+func main() {
+
+	client.Commands = []cli.Command{
+		{
+			Name:  "worker",
+			Usage: "launch machinery worker",
+			Action: func(c *cli.Context) error {
+				log.Printf("start %s\n", c.Command.Name)
+				cnf := &configs.Worker{
+					Config: &config.Config{
+						Broker:          "amqp://guest:guest@localhost:5672/",
+						DefaultQueue:    "machinery_tasks",
+						ResultBackend:   "redis://localhost:6379/0",
+						ResultsExpireIn: 3600,
+						AMQP: &config.AMQPConfig{
+							Exchange:      "machinery_exchange",
+							ExchangeType:  "direct",
+							BindingKey:    "machinery_task",
+							PrefetchCount: 3,
+						},
+					},
+					Task: map[string]interface{}{
+						"healthcheck": tasks.HealthCheck,
+					},
+				}
+				if err := workers.Execute(cnf, "consume", 1); err != nil {
+					return cli.NewExitError(err.Error(), 1)
+				}
+				return nil
+			},
+		},
+		{
+			Name:  "server",
+			Usage: "send example tasks ",
+			Action: func(c *cli.Context) error {
+				log.Printf("start %s\n", c.Command.Name)
+				startServer()
+				return nil
+			},
+		},
+	}
+
+	// Run the CLI app
+	client.Run(os.Args)
 
 }

@@ -7,4 +7,5 @@ import (
 
 func HealthCheck(a *fiber.App) {
 	a.Get("/healthcheck", controllers.HealthCheck)
+	a.Get("/workercheck", controllers.HealthCheckWorker)
 }
