@@ -30,11 +30,11 @@ var (
 	_      int
 	_      int
 
-	_ string
-	_ int
-	_ string
-	_ int
-	_ string
+	_        string
+	_        int
+	_        string
+	_        int
+	CacheUrl string
 
 	BrokerUrl string
 
@@ -76,7 +76,7 @@ func init() {
 	_ = os.Getenv("REDIS_PASSWORD")
 	_ = convertEnvToInt("REDIS_DB_NUMBER")
 	BrokerUrl = os.Getenv("BROKER_URL")
-	_ = os.Getenv("REDIS_URL")
+	CacheUrl = os.Getenv("REDIS_URL")
 	BlockChainRPC = os.Getenv("BLOCKCHAIN_RPC")
 	ChainID = convertEnvToInt("CHAIN_ID")
 	ContractAddr = os.Getenv("CONTRACT_ADDR")

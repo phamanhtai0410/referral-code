@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	tableCodeUsed string = "referral-code-used"
+	tableCodeUsed string = "referral-code-used-test"
 )
 
 type CodeUsed struct {

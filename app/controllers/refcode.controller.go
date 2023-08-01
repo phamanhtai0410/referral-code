@@ -25,12 +25,7 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 			"success": false,
 		})
 	}
-	if err := services.SaveRefCodeInfo(&request); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"msg":     err.Error(),
-			"success": false,
-		})
-	}
+	go services.SaveRefCodeInfo(&request)
 	return c.JSON(fiber.Map{
 		"msg":     "ok",
 		"success": true,

@@ -1,30 +1,26 @@
 package services
 
 import (
-	"encoding/json"
-	"errors"
 	"log"
 
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/app/schemas"
-	"example.com/refcode/v1/pkg/constants"
-	"example.com/refcode/v1/platform/queue"
+	"example.com/refcode/v1/app/tasks"
+	"example.com/refcode/v1/pkg/workers"
 )
 
-func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) error {
-	data, err := json.Marshal(req)
+func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) {
+	err := workers.Delay(
+		"Worker.SaveCodeUsed",
+		tasks.SaveRefCodeUsed,
+		req.ReferralCode,
+		req.Domain,
+		req.Address,
+		req.Price,
+	)
 	if err != nil {
-		return errors.New("[SERVICE #3] failed to encode " + err.Error())
+		log.Fatal(err)
 	}
-	if err = queue.Publish(
-		constants.WorkerQueue,
-		constants.MsgSaveRefCodeUsed,
-		data,
-	); err != nil {
-		return errors.New("[SERVICE #4] Failed to publish msg " + err.Error())
-	}
-	log.Println("[SERVICES #5] Publishing to queue ...")
-	return nil
 }
 
 func RefCodeTracking(referralCode string) (*schemas.TrackingResponse, error) {

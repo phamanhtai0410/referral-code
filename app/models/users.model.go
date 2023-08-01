@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	TableDetails string = "referral-code-detail"
+	TableDetails string = "referral-code-detail-test"
 )
 
 type User struct {
@@ -36,7 +36,7 @@ func (ref *User) FindDocsByReferralCode(referralCode string) (*User, error) {
 	var result = new(User)
 	collections := database.GetCollection(TableDetails)
 	ctx, _ := database.NewContext()
-	filter := bson.D{{"referral_code", referralCode}}
+	filter := bson.M{"referral_code": referralCode}
 	err := collections.FindOne(ctx, filter).Decode(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
