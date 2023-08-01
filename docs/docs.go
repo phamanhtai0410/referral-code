@@ -43,29 +43,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/refcode/gen": {
-            "get": {
-                "description": "Generate RefCode.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RefCode"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    }
-                }
-            }
-        },
-        "/refcode/save": {
+        "/save": {
             "post": {
                 "description": "Save RefCode to Database.",
                 "consumes": [
@@ -152,9 +130,6 @@ const docTemplate = `{
                 "domain": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "price": {
                     "type": "number"
                 },
@@ -166,17 +141,11 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "counter": {
                     "type": "integer"
                 },
                 "created": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "last_updated": {
                     "type": "string"
@@ -190,7 +159,7 @@ const docTemplate = `{
                 "referral_code": {
                     "type": "string"
                 },
-                "withdraw_available": {
+                "total_earn": {
                     "type": "number"
                 }
             }
