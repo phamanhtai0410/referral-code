@@ -38,7 +38,7 @@ type RefCodeUser struct {
 
 // RefCodeMetaData contains all meta data concerning the RefCode contract.
 var RefCodeMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Withdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"userAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"totalEarn\",\"type\":\"uint256\"}],\"internalType\":\"structRefCode.User[]\",\"name\":\"users\",\"type\":\"tuple[]\"}],\"name\":\"uploadData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"totalEarn\",\"type\":\"uint256\"}],\"name\":\"uploadSingleData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Withdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"userAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"totalEarn\",\"type\":\"uint256\"}],\"internalType\":\"structRefCode.User[]\",\"name\":\"users\",\"type\":\"tuple[]\"}],\"name\":\"uploadData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"totalEarn\",\"type\":\"uint256\"}],\"name\":\"uploadSingleData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"domain\",\"type\":\"string\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // RefCodeABI is the input ABI used to generate the binding from.
@@ -302,25 +302,25 @@ func (_RefCode *RefCodeTransactorSession) UploadSingleData(addr common.Address, 
 	return _RefCode.Contract.UploadSingleData(&_RefCode.TransactOpts, addr, domain, totalEarn)
 }
 
-// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+// Withdraw is a paid mutator transaction binding the contract method 0x31fb67c2.
 //
-// Solidity: function withdraw() returns()
-func (_RefCode *RefCodeTransactor) Withdraw(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _RefCode.contract.Transact(opts, "withdraw")
+// Solidity: function withdraw(string domain) returns()
+func (_RefCode *RefCodeTransactor) Withdraw(opts *bind.TransactOpts, domain string) (*types.Transaction, error) {
+	return _RefCode.contract.Transact(opts, "withdraw", domain)
 }
 
-// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+// Withdraw is a paid mutator transaction binding the contract method 0x31fb67c2.
 //
-// Solidity: function withdraw() returns()
-func (_RefCode *RefCodeSession) Withdraw() (*types.Transaction, error) {
-	return _RefCode.Contract.Withdraw(&_RefCode.TransactOpts)
+// Solidity: function withdraw(string domain) returns()
+func (_RefCode *RefCodeSession) Withdraw(domain string) (*types.Transaction, error) {
+	return _RefCode.Contract.Withdraw(&_RefCode.TransactOpts, domain)
 }
 
-// Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
+// Withdraw is a paid mutator transaction binding the contract method 0x31fb67c2.
 //
-// Solidity: function withdraw() returns()
-func (_RefCode *RefCodeTransactorSession) Withdraw() (*types.Transaction, error) {
-	return _RefCode.Contract.Withdraw(&_RefCode.TransactOpts)
+// Solidity: function withdraw(string domain) returns()
+func (_RefCode *RefCodeTransactorSession) Withdraw(domain string) (*types.Transaction, error) {
+	return _RefCode.Contract.Withdraw(&_RefCode.TransactOpts, domain)
 }
 
 // Receive is a paid mutator transaction binding the contract receive function.

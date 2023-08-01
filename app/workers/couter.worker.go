@@ -1,9 +1,10 @@
 package workers
 
 import (
-	"example.com/refcode/v1/pkg/utils"
 	"log"
 	"time"
+
+	"example.com/refcode/v1/pkg/utils"
 
 	"example.com/refcode/v1/app/models"
 
@@ -49,10 +50,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 				log.Fatal("[WORKER] " + err.Error())
 			}
 		} else {
-			if level == "" {
-				level = user.Level
-				rate = user.Rate
-			}
+			level, rate = utils.ReferralRule(int(val + user.Counter))
 			err = user.UpdateRecord(key, val+user.Counter, (price[key]*rate)+user.TotalEarn, rate, level)
 			if err != nil {
 				log.Fatal("[WORKER] " + err.Error())
