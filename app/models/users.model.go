@@ -83,6 +83,19 @@ func (ref *User) UpdateRecord(
 	return err
 }
 
+func (ref *User) Withdraw(referralCode string) error {
+	collection := database.GetCollection(TableDetails)
+	filter := bson.M{"referral_code": referralCode}
+	update := bson.M{
+		"$set": bson.M{
+			"total_earn":   0,
+			"last_updated": time.Now().UTC(),
+		},
+	}
+	_, err := collection.UpdateOne(context.TODO(), filter, update)
+	return err
+}
+
 func (ref *User) GetAllRecords() ([]User, error) {
 	collection := database.GetCollection(TableDetails)
 	var codes []User

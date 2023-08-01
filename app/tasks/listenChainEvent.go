@@ -39,6 +39,11 @@ func ListenChainEvent() {
 			if err != nil {
 				log.Fatal("WATCH WITHDRAW ERROR #3: ", err)
 			}
+			var user models.User
+			user.Withdraw(vlog.Domain)
+			if err != nil {
+				log.Fatal("WATCH WITHDRAW ERROR #3: ", err)
+			}
 		}
 	}
 }
