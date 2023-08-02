@@ -27,8 +27,8 @@ services:
     restart: always
     # volumes:
     #   -./:/app
-    ports:
-      - 5000:5000
+    # ports:
+    #   - 5000:5000
     networks:
       - dev-networks
     # depends_on:
