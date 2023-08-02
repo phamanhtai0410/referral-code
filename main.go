@@ -11,7 +11,6 @@ import (
 	"example.com/refcode/v1/app/tasks"
 	"example.com/refcode/v1/pkg/configs"
 	"example.com/refcode/v1/pkg/workers"
-	"github.com/RichardKnop/machinery/v1/config"
 	"github.com/urfave/cli"
 
 	_ "example.com/refcode/v1/docs" // load API Docs files (Swagger)
@@ -19,19 +18,6 @@ import (
 	"example.com/refcode/v1/pkg/routes"
 	// _ "github.com/joho/godotenv/autoload" // load .env file automatically
 )
-
-// @title API
-// @version 1.0
-// @description This is an auto-generated API Docs.
-// @termsOfService http://swagger.io/terms/
-// @contact.name API Support
-// @contact.email your@mail.com
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @BasePath /api
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 
 var (
 	client *cli.App
@@ -76,21 +62,23 @@ func startServer(cfg *configs.Worker) {
 	_app.Run()
 }
 
+// @title API
+// @version 1.0
+// @description This is an auto-generated API Docs.
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.email your@mail.com
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @BasePath /api
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 
+	// setting one queue for all workers
 	cnf := &configs.Worker{
-		Config: &config.Config{
-			Broker:          configs.BrokerUrl,
-			DefaultQueue:    "machinery_tasks",
-			ResultBackend:   configs.CacheUrl,
-			ResultsExpireIn: 3600,
-			AMQP: &config.AMQPConfig{
-				Exchange:      "machinery_exchange",
-				ExchangeType:  "direct",
-				BindingKey:    "machinery_task",
-				PrefetchCount: 3,
-			},
-		},
+		Config: configs.WorkerBaseSetting("machinery_tasks", configs.BrokerUrl, configs.CacheUrl),
 		Task: map[string]interface{}{
 			"Worker.HealthCheck":      tasks.HealthCheck,
 			"Worker.SaveCodeUsed":     tasks.SaveRefCodeUsed,
