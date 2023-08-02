@@ -11,7 +11,6 @@ import (
 	"example.com/refcode/v1/app/tasks"
 	"example.com/refcode/v1/pkg/configs"
 	"example.com/refcode/v1/pkg/workers"
-	"github.com/RichardKnop/machinery/v1/config"
 	"github.com/urfave/cli"
 
 	_ "example.com/refcode/v1/docs" // load API Docs files (Swagger)
@@ -77,19 +76,9 @@ func startServer(cfg *configs.Worker) {
 // @name Authorization
 func main() {
 
+	// setting one queue for all workers
 	cnf := &configs.Worker{
-		Config: &config.Config{
-			Broker:          configs.BrokerUrl,
-			DefaultQueue:    "machinery_tasks",
-			ResultBackend:   configs.CacheUrl,
-			ResultsExpireIn: 3600,
-			AMQP: &config.AMQPConfig{
-				Exchange:      "machinery_exchange",
-				ExchangeType:  "direct",
-				BindingKey:    "machinery_task",
-				PrefetchCount: 3,
-			},
-		},
+		Config: configs.WorkerBaseSetting("machinery_tasks", configs.BrokerUrl, configs.CacheUrl),
 		Task: map[string]interface{}{
 			"Worker.HealthCheck":      tasks.HealthCheck,
 			"Worker.SaveCodeUsed":     tasks.SaveRefCodeUsed,

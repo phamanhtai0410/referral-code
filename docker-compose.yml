@@ -12,8 +12,8 @@ services:
     #   -./:/app
     ports:
       - 5000:5000
-    networks:
-      - dev-networks
+    # networks:
+    #   - dev-networks
     # depends_on:
     #   - rabbitmq
     command: ./build/refcode_api server
@@ -29,8 +29,8 @@ services:
     #   -./:/app
     # ports:
     #   - 5000:5000
-    networks:
-      - dev-networks
+    # networks:
+    #   - dev-networks
     # depends_on:
     #   - rabbitmq
     command: ./build/refcode_api worker
