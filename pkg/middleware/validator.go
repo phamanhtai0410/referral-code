@@ -26,7 +26,7 @@ func ValidateData(c *fiber.Ctx) error {
 	validate := validator.New()
 	switch c.Path() {
 	case "/save":
-		request := new(schemas.RefCodeUsedRequest)
+		request := new(schemas.CodeUsedRequest)
 		if err := c.BodyParser(request); err != nil {
 			log.Printf("Error parsing request body: " + err.Error())
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

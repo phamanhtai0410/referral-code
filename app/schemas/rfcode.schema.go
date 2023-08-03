@@ -7,6 +7,13 @@ type RefCodeResponse struct {
 	Success bool   `json:"success"`
 }
 
+type CodeUsedRequest struct {
+	ReferralCode string `json:"referral_code" validate:"required"`
+	Domain       string `json:"domain" validate:"required"`
+	Price        string `json:"price" validate:"required"`
+	Address      string `json:"address" validate:"required"`
+}
+
 type RefCodeUsedRequest struct {
 	ReferralCode string  `json:"referral_code" validate:"required"`
 	Domain       string  `json:"domain" validate:"required"`
