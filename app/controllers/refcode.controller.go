@@ -3,6 +3,7 @@ package controllers
 import (
 	"example.com/refcode/v1/app/schemas"
 	"example.com/refcode/v1/app/services"
+	"example.com/refcode/v1/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,7 +18,7 @@ import (
 // @Success 200 {object} models.CodeUsed
 // @Router /save [POST]
 func SaveRefCodeUsed(c *fiber.Ctx) error {
-	request, ok := c.Locals("/save").(schemas.RefCodeUsedRequest)
+	req, ok := c.Locals("/save").(schemas.CodeUsedRequest)
 	if !ok {
 		// Handle error (e.g., return an error response)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -25,7 +26,19 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 			"success": false,
 		})
 	}
-	go services.SaveRefCodeInfo(&request)
+	price, err := utils.String2Float64(req.Price)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"msg":     err.Error(),
+			"success": false,
+		})
+	}
+	go services.SaveRefCodeInfo(&schemas.RefCodeUsedRequest{
+		ReferralCode: req.ReferralCode,
+		Price:        price,
+		Address:      req.Address,
+		Domain:       req.Address,
+	})
 	return c.JSON(fiber.Map{
 		"msg":     "ok",
 		"success": true,
