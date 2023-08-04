@@ -156,6 +156,29 @@ deploy_APP_NAME_API_stag:
   only:
     refs:
       - stag
+deploy_APP_NAME_API_worker_stag:
+  stage: deploy
+  image:  968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/base-cicd:alpine-helm-3.0.1
+  tags:
+  - esol-stag
+  script:
+    - *kubectl_config
+    - mv /apps/helm-template .
+    - mv /apps/helm-template-cronjob .
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "stag" ]; then
+        sed -i -e "s#\[NAMESPACE\]#$NAMESPACE_STAG#g" skaffold.yaml
+        sed -i -e "s#\[APP_NAME\]#$APP_NAME_API#g" skaffold.yaml
+        sed -i -e "s#\[CONTAINER_REPO\]#$CONTAINER_REPO_ASIA_STAG#g" skaffold.yaml
+        sed -i -e "s#\[CI_COMMIT_REF_NAME\]#$CI_COMMIT_REF_NAME#g" skaffold.yaml
+      fi
+    - git clone https://read-token:$GITLAB_TOKEN@gitlab.rinznetwork.com/rinz-io-devops/helm-value/$HELM_VALUE_FOLDER/$IMAGE_NAME.git
+    - mv $IMAGE_NAME/refcode-api-worker-stag.yaml .
+    - /usr/local/bin/skaffold deploy -p profile-worker-stag   -a build_sync.json
+  retry: 2
+  only:
+    refs:
+      - stag
 deploy_APP_NAME_API_prod:
   stage: deploy
   image:  968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/base-cicd:alpine-helm-3.0.1

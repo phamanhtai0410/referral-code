@@ -83,6 +83,7 @@ profiles:
         context: .
         docker:
           dockerfile: Dockerfile
+
   - name: profile-[APP_NAME]-prod
     build:
       tagPolicy:
@@ -108,6 +109,38 @@ profiles:
               # Path to the values file
               valuesFiles:
               - ./[APP_NAME]-prod.yaml
+              artifactOverrides:
+                image.repository: [CONTAINER_REPO]
+             
+          flags:
+            upgrade:
+              - --install
+
+  - name: profile-worker-stag
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: CommitSha
+          ignoreChanges: true
+      artifacts:
+      - image: [CONTAINER_REPO]
+        context: .
+        docker:
+          dockerfile: Dockerfile
+    deploy:
+        # Using Helm as the deployment strategy
+        statusCheckDeadlineSeconds: 300
+        helm:
+          # Pass the parameters according to  
+          releases:
+            - name: [APP_NAME]
+              chartPath: ./helm-template
+              namespace: [NAMESPACE]
+              # Location of the chart - here, we use a local chart
+              wait: true
+              # Path to the values file
+              valuesFiles:
+              - ./refcode-api-worker-stag.yaml
               artifactOverrides:
                 image.repository: [CONTAINER_REPO]
              
