@@ -133,7 +133,7 @@ profiles:
         helm:
           # Pass the parameters according to  
           releases:
-            - name: [APP_NAME]
+            - name: [APP_NAME]-worker
               chartPath: ./helm-template
               namespace: [NAMESPACE]
               # Location of the chart - here, we use a local chart
