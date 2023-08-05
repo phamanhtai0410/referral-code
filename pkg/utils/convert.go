@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"log"
+	"math"
 	"strconv"
 )
 
@@ -20,4 +21,8 @@ func String2Float64(num string) (float64, error) {
 		return -1, errors.New("failed to parse number from string")
 	}
 	return floatValue, nil
+}
+
+func Floor(num float64) float64 {
+	return math.Floor(num*math.Pow(10, 8)) / math.Pow(10, 8)
 }

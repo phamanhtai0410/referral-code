@@ -61,6 +61,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 			}
 		} else {
 			level, rate = utils.ReferralRule(int(val + user.Counter))
+			_price := utils.Floor((price[key] * rate) + user.Pending)
 			err := workers.Delay(
 				"Worker.UpdateUserRecord",
 				UpdateUserRecord,
@@ -68,7 +69,7 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 				val+user.Counter,
 				user.TotalEarn,
 				rate,
-				(price[key]*rate)+user.Pending,
+				_price,
 				level,
 			)
 			if err != nil {
