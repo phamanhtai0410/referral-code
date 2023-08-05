@@ -41,6 +41,7 @@ var (
 	BlockChainRPC string
 	ChainID       int
 	ContractAddr  string
+	SentryDNS     string
 )
 
 func convertEnvToInt(key string) int {
@@ -80,6 +81,7 @@ func init() {
 	BlockChainRPC = os.Getenv("BLOCKCHAIN_RPC")
 	ChainID = convertEnvToInt("CHAIN_ID")
 	ContractAddr = os.Getenv("CONTRACT_ADDR")
+	SentryDNS = os.Getenv("SENTRY_DNS")
 }
 
 type TransactOptsConfig struct {

@@ -34,10 +34,11 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 		})
 	}
 	go services.SaveRefCodeInfo(&schemas.RefCodeUsedRequest{
-		ReferralCode: req.ReferralCode,
-		Price:        price,
-		Address:      req.Address,
-		Domain:       req.Address,
+		ReferralCode:    req.ReferralCode,
+		Price:           price,
+		Address:         req.Address,
+		Domain:          req.Address,
+		TransactionHash: req.TransactionHash,
 	})
 	return c.JSON(fiber.Map{
 		"msg":     "ok",
@@ -72,6 +73,7 @@ func RefCodeTracking(c *fiber.Ctx) error {
 				Level:        "",
 				Rate:         0,
 				TotalEarn:    0,
+				Pending:      0,
 			},
 			"success": true,
 		})

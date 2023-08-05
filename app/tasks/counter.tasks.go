@@ -53,7 +53,8 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 				level,
 				val,
 				rate,
-				float64(price[key]*rate),
+				float64(0),
+				price[key]*rate,
 			)
 			if err != nil {
 				log.Fatal(err)
@@ -65,8 +66,9 @@ func CountNumberOfRefCodeUsed(_time time.Time) {
 				UpdateUserRecord,
 				key,
 				val+user.Counter,
-				(price[key]*rate)+user.TotalEarn,
+				user.TotalEarn,
 				rate,
+				(price[key]*rate)+user.Pending,
 				level,
 			)
 			if err != nil {

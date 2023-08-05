@@ -7,9 +7,9 @@ import (
 	"github.com/RichardKnop/machinery/v1/log"
 )
 
-func UpdateUserRecord(refCodeCondition string, counter int64, totalEarn float64, rate float64, level string) error {
+func UpdateUserRecord(refCodeCondition string, counter int64, totalEarn, rate, pending float64, level string) error {
 	var user models.User
-	err := user.UpdateRecord(refCodeCondition, counter, totalEarn, rate, level)
+	err := user.UpdateRecord(refCodeCondition, counter, totalEarn, rate, pending, level)
 	if err != nil {
 		return err
 	}
@@ -17,7 +17,7 @@ func UpdateUserRecord(refCodeCondition string, counter int64, totalEarn float64,
 	return nil
 }
 
-func SaveUserInfo(created, uploaded, referralCode, level string, counter int64, rate, totalEarn float64) error {
+func SaveUserInfo(created, uploaded, referralCode, level string, counter int64, rate, totalEarn, pending float64) error {
 	timeFormat := "2006-01-02T15:04:05.999Z"
 	_created, err := time.Parse(timeFormat, created)
 	if err != nil {
@@ -36,6 +36,7 @@ func SaveUserInfo(created, uploaded, referralCode, level string, counter int64, 
 		Created:      _created,
 		LastUpdated:  _uploaded,
 		TotalEarn:    totalEarn,
+		Pending:      pending,
 	}
 	log.DEBUG.Println("SAVE OK")
 	return newUser.Save()

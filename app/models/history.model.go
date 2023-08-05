@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	tableHistory string = "withdraw-history"
+	tableHistory string = "withdraw-history-test"
 )
 
 type WithdrawHistory struct {

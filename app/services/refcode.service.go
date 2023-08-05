@@ -16,6 +16,7 @@ func SaveRefCodeInfo(req *schemas.RefCodeUsedRequest) {
 		req.ReferralCode,
 		req.Domain,
 		req.Address,
+		req.TransactionHash,
 		req.Price,
 	)
 	if err != nil {
@@ -37,6 +38,7 @@ func RefCodeTracking(referralCode string) (*schemas.TrackingResponse, error) {
 		Level:        user.Level,
 		TotalEarn:    user.TotalEarn,
 		ReferralCode: user.ReferralCode,
+		Pending:      user.Pending,
 	}, nil
 }
 

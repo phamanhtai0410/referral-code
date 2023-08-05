@@ -9,15 +9,16 @@ import (
 )
 
 const (
-	tableCodeUsed string = "referral-code-used"
+	tableCodeUsed string = "referral-code-used-test"
 )
 
 type CodeUsed struct {
-	ReferralCode string    `json:"referral_code" bson:"referral_code"`
-	Domain       string    `json:"domain"`
-	Price        float64   `json:"price"`
-	Address      string    `json:"address"`
-	Created      time.Time `bson:"created"`
+	ReferralCode    string    `json:"referral_code" bson:"referral_code"`
+	Domain          string    `json:"domain"`
+	Price           float64   `json:"price"`
+	Address         string    `json:"address"`
+	Created         time.Time `bson:"created"`
+	TransactionHash string    `json:"transaction_hash" bson:"transaction_hash"`
 }
 
 func (r *CodeUsed) Save() error {

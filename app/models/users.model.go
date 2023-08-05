@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	TableDetails string = "referral-code-detail"
+	TableDetails string = "referral-code-detail-test"
 )
 
 type User struct {
@@ -22,6 +22,7 @@ type User struct {
 	Level        string    `json:"level"`
 	Rate         float64   `json:"rate"`
 	TotalEarn    float64   `json:"total_earn" bson:"total_earn"`
+	Pending      float64   `json:"pending" bson:"pending"`
 }
 
 func (ref *User) Save() error {
@@ -65,7 +66,7 @@ func (ref *User) IsExits(address, domain string) bool {
 func (ref *User) UpdateRecord(
 	refCodeCondition string,
 	counter int64,
-	totalEarn, rate float64,
+	totalEarn, rate, pending float64,
 	level string,
 ) error {
 	collection := database.GetCollection(TableDetails)
@@ -76,6 +77,7 @@ func (ref *User) UpdateRecord(
 			"level":        level,
 			"rate":         rate,
 			"total_earn":   totalEarn,
+			"pending":      pending,
 			"last_updated": time.Now().UTC(),
 		},
 	}

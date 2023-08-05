@@ -8,17 +8,19 @@ type RefCodeResponse struct {
 }
 
 type CodeUsedRequest struct {
-	ReferralCode string `json:"referral_code" validate:"required"`
-	Domain       string `json:"domain" validate:"required"`
-	Price        string `json:"price" validate:"required"`
-	Address      string `json:"address" validate:"required"`
+	ReferralCode    string `json:"referral_code" validate:"required"`
+	Domain          string `json:"domain" validate:"required"`
+	Price           string `json:"price" validate:"required"`
+	Address         string `json:"address" validate:"required"`
+	TransactionHash string `json:"transaction_hash" validate:"required"`
 }
 
 type RefCodeUsedRequest struct {
-	ReferralCode string  `json:"referral_code" validate:"required"`
-	Domain       string  `json:"domain" validate:"required"`
-	Price        float64 `json:"price" validate:"required"`
-	Address      string  `json:"address" validate:"required"`
+	ReferralCode    string  `json:"referral_code" validate:"required"`
+	Domain          string  `json:"domain" validate:"required"`
+	Price           float64 `json:"price" validate:"required"`
+	Address         string  `json:"address" validate:"required"`
+	TransactionHash string  `json:"transaction_hash" validate:"required"`
 }
 
 type RefCodeRequest struct {
@@ -36,4 +38,5 @@ type TrackingResponse struct {
 	Level        string  `json:"level"`
 	Rate         float64 `json:"rate"`
 	TotalEarn    float64 `json:"total_earn"`
+	Pending      float64 `json:"pending"`
 }
