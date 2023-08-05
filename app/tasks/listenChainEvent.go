@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"log"
+	"time"
 
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/app/models/contract"
@@ -30,6 +31,7 @@ func ListenChainEvent() {
 				SaveHistory,
 				vlog.Account.Hex(),
 				vlog.Domain,
+				time.Now().UTC().Format("2006-01-02T15:04:05.999Z"),
 				float64(amount.Int64())/float64(blockchain.EtherConst.Int64()),
 			)
 			if err != nil {
