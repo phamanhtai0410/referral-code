@@ -27,6 +27,7 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 		})
 	}
 	price, err := utils.String2Float64(req.Price)
+	price = utils.Floor(price)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"msg":     err.Error(),
