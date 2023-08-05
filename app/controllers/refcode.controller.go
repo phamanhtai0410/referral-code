@@ -37,7 +37,7 @@ func SaveRefCodeUsed(c *fiber.Ctx) error {
 		ReferralCode:    req.ReferralCode,
 		Price:           price,
 		Address:         req.Address,
-		Domain:          req.Address,
+		Domain:          req.Domain,
 		TransactionHash: req.TransactionHash,
 	})
 	return c.JSON(fiber.Map{
