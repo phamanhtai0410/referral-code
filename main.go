@@ -78,7 +78,7 @@ func main() {
 
 	// setting one queue for all workers
 	cnf := &configs.Worker{
-		Config: configs.WorkerBaseSetting("machinery_tasks", configs.BrokerUrl, configs.CacheUrl),
+		Config: configs.WorkerBaseSetting("machinery_tasks", configs.BrokerUrl, configs.ResultBackend),
 		Task: map[string]interface{}{
 			"Worker.HealthCheck":      tasks.HealthCheck,
 			"Worker.SaveCodeUsed":     tasks.SaveRefCodeUsed,
