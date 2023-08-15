@@ -6,6 +6,7 @@ import (
 	"example.com/refcode/v1/app/models"
 	"example.com/refcode/v1/app/schemas"
 	"example.com/refcode/v1/app/tasks"
+	"example.com/refcode/v1/pkg/utils"
 	"example.com/refcode/v1/pkg/workers"
 )
 
@@ -38,7 +39,7 @@ func RefCodeTracking(referralCode string) (*schemas.TrackingResponse, error) {
 		Level:        user.Level,
 		TotalEarn:    user.TotalEarn,
 		ReferralCode: user.ReferralCode,
-		Pending:      user.Pending,
+		Pending:      utils.Floor(user.Pending),
 	}, nil
 }
 
