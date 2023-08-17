@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"time"
 
 	"errors"
 
@@ -105,12 +106,7 @@ func Delay(taskName string, fn interface{}, args ...interface{}) error {
 	span.LogFields(opentracing_log.String("batch.id", batchID))
 
 	log.INFO.Println("Starting batch:", batchID)
-	_, err := server.SendTaskWithContext(ctx, task)
-	if err != nil {
-		return fmt.Errorf("could not send task: %s", err.Error())
-	}
 
-	/* asyncResult returns value
 	asyncResult, err := server.SendTaskWithContext(ctx, task)
 	if err != nil {
 		return fmt.Errorf("could not send task: %s", err.Error())
@@ -120,6 +116,5 @@ func Delay(taskName string, fn interface{}, args ...interface{}) error {
 		return fmt.Errorf("getting task result failed with error: %s", err.Error())
 	}
 	log.INFO.Printf(tasks.HumanReadableResults(results))
-	*/
 	return nil
 }
