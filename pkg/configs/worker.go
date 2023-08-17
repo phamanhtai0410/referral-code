@@ -9,21 +9,17 @@ type Worker struct {
 	Config *config.Config
 }
 
-func AMQPConfig() *config.AMQPConfig {
-	return &config.AMQPConfig{
-		Exchange:      "machinery_exchange",
-		ExchangeType:  "direct",
-		BindingKey:    "machinery_task",
-		PrefetchCount: 3,
-	}
-}
-
 func WorkerBaseSetting(queueName, broker, resultBackend string) *config.Config {
 	return &config.Config{
 		Broker:          broker,
 		DefaultQueue:    queueName,
 		ResultBackend:   resultBackend,
 		ResultsExpireIn: 3600,
-		AMQP:            AMQPConfig(),
+		AMQP: &config.AMQPConfig{
+			Exchange:      "machinery_exchange",
+			ExchangeType:  "direct",
+			BindingKey:    queueName,
+			PrefetchCount: 3,
+		},
 	}
 }
