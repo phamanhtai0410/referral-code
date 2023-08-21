@@ -10,10 +10,7 @@ import (
 
 var (
 	StageStatus string
-
-	DbType        string
-	DbHost        string
-	DbPort        int
+	MongoUrl      string
 	DbName        string
 	ResultBackend string
 
@@ -36,9 +33,7 @@ func convertEnvToInt(key string) int {
 
 func init() {
 	StageStatus = os.Getenv("STAGE_STATUS")
-	DbType = os.Getenv("DB_TYPE")
-	DbHost = os.Getenv("DB_HOST")
-	DbPort = convertEnvToInt("DB_PORT")
+	MongoUrl = os.Getenv("MONGO_URL")
 	DbName = os.Getenv("DB_NAME")
 	BrokerUrl = os.Getenv("BROKER_URL")
 	ResultBackend = os.Getenv("RESULT_BACKEND")

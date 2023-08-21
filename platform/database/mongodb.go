@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"example.com/refcode/v1/pkg/configs"
@@ -18,10 +17,10 @@ func NewContext() (context.Context, context.CancelFunc) {
 }
 
 func init() {
-	uri := fmt.Sprintf("%s://%s:%d", configs.DbType, configs.DbHost, configs.DbPort)
+	// uri := fmt.Sprintf("%s://%s:%d", configs.DbType, configs.DbHost, configs.DbPort)
 	ctx, _ := NewContext()
 	var err error
-	client, err = mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	client, err = mongo.Connect(ctx, options.Client().ApplyURI(configs.MongoUrl))
 	if err != nil {
 		log.Fatal("[MONGO_DB] Cannot connect to mongoDB")
 	}
